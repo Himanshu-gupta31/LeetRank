@@ -1,17 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
-export default function ProfilePage() {
-  const router = useRouter();
-  const { username } = router.query; // Get the username from the query parameter
+import React, { useEffect, useState } from "react";
+
+export default function ProfilePage({ searchParams }: { searchParams: Record<string, string | undefined> }) {
+  const username = searchParams.username;
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     if (username) {
-      // Ensure username is a string before passing to fetchProfileData
-      fetchProfileData(Array.isArray(username) ? username[0] : username);
+      fetchProfileData(username);
     }
   }, [username]);
 
@@ -35,14 +33,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="profile-container">
-      {profileData ? (
-        <div>
-          <p>Hello</p>
-        </div>
-      ) : (
-        <p>Loading...</p>
-      )}
+    <div>
+      <div>{profileData ? JSON.stringify(profileData) : "Loading profile data..."}</div>
     </div>
   );
 }

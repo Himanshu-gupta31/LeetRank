@@ -28,7 +28,7 @@ export default function LeetCodeProfile() {
       const data = await response.json();
       if (data.success) {
         console.log("Details successfully registered:", data);
-        router.push(`/profile/${username}`); // Redirect to the user's profile page
+        router.push(`/profile?username=${username}`); // Redirect to the user's profile page
       } else {
         console.error("Failed to register details:", data.message);
       }
