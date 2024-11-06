@@ -18,3 +18,11 @@ model User {
   username String @unique
   college  String
 }
+
+model Ranking {
+  id         String @id @default(cuid())
+  totalques  String
+  hardques   String
+  mediumques String
+  easyques   String
+}
