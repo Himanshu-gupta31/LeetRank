@@ -21,14 +21,14 @@ export default function LeetCodeProfile() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username,
-          college,
+          username:username,
+          college:college,
         }),
       });
       const data = await response.json();
       if (data.success) {
         console.log("Details successfully registered:", data);
-        router.push(`/profile?username=${username}`); // Redirect to the user's profile page
+        router.push(`/profile?username=${username}?collge=${college}`); // Redirect to the user's profile page
       } else {
         console.error("Failed to register details:", data.message);
       }
