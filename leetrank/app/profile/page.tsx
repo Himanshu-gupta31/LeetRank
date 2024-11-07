@@ -23,20 +23,22 @@ interface QuestionData {
 
 export default function Component({ searchParams }: { searchParams: Record<string, string | undefined> }) {
   const username = searchParams.username
+  const college=searchParams.college
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [error, setError] = useState("")
   const [questionData, setQuestionData] = useState<QuestionData | null>(null)
-
+  const [rank,setRank]=useState("")
   useEffect(() => {
     if (username) {
       fetchProfileData(username)
       fetchQuestionsSolved(username)
+      
     }
   }, [username])
 
   const fetchProfileData = async (username: string) => {
     try {
-      const response = await fetch(`/api/fetchuserdetails?username=${username}`)
+      const response = await fetch(`/api/fetchuserdetails?username=${username}&college=${college}`)
       const data = await response.json()
       if (data.success) {
         setProfileData(data.profileData)
@@ -51,7 +53,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
 
   const fetchQuestionsSolved = async (username: string) => {
     try {
-      const response = await fetch(`/api/questionsolved?username=${username}`)
+      const response = await fetch(`/api/questionsolved?username=${username}&college=${college}`)
       const data = await response.json()
       if (data.success) {
         setQuestionData(data.profileData)
@@ -61,6 +63,17 @@ export default function Component({ searchParams }: { searchParams: Record<strin
     } catch (error) {
       setError("An error occurred while fetching the questions solved data.")
       console.error(error)
+    }
+  }
+  const fetchRank=async(username:string,college:string)=>{
+    try {
+      const response=await fetch(`api/rankingsystem?username=${username}&college=${college}`);
+      const data=await response.json()
+      if(data.success){
+       
+      }
+    } catch (error) {
+      
     }
   }
 

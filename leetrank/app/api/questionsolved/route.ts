@@ -3,8 +3,9 @@ export async function GET(request:NextRequest,response:NextResponse) {
     try {
         const {searchParams}=new URL(request.url);
         const username=searchParams.get("username")
-        if(!username){
-            return NextResponse.json({success: false, message: "Username is required" }, { status: 400 });
+        const college=searchParams.get("college")
+        if(!username || !college){
+            return NextResponse.json({success: false, message: "Username or College is required" }, { status: 400 });
         }
         const leetcodeUrl=`https://alfa-leetcode-api.onrender.com/${username}/solved`;
         const leetcodeResponse=await fetch(leetcodeUrl)

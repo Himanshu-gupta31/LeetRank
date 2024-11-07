@@ -1,10 +1,13 @@
 import { NextResponse,NextRequest } from "next/server";
-export async function GET(request:NextRequest,response:NextResponse) {
+export async function GET(request:NextRequest) {
     try {
         const {searchParams}=new URL(request.url);
+        
         const username=searchParams.get("username")
-        if(!username){
-            return NextResponse.json({success: false, message: "Username is required" }, { status: 400 })
+        const college=searchParams.get("college")
+        
+        if(!username || !college){
+            return NextResponse.json({success: false, message: "Username or college is required " }, { status: 400 })
         }
         const leetcodeUrl=`https://alfa-leetcode-api.onrender.com/${username}`;
         const leetcodeResponse=await fetch(leetcodeUrl)
