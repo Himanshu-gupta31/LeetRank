@@ -4,15 +4,13 @@ import {  SignedOut, useUser,RedirectToSignIn } from "@clerk/nextjs"
 import { ChartNoAxesCombined} from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function Navbar() {
-  const {isSignedIn}=useUser();
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  useEffect(()=>{
-    if(isSignedIn){
-       <RedirectToSignIn redirectUrl="/home"/>
-    }
-  },[])
+  
+  
 
   return (
     <nav className="w-full border-b border-neutral-600 bg-black text-white">

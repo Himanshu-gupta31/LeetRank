@@ -1,10 +1,20 @@
-
+"use client"
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Code2, Trophy, Users, Zap } from 'lucide-react'
+import { Trophy, Users, Zap } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { useUser } from '@clerk/nextjs'
 
 export default function Home() {
+  const router=useRouter()
+  const {isSignedIn}=useUser()
+  useEffect(()=>{
+     if(isSignedIn){
+      router.push("/home")
+     }
+  },[isSignedIn])
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       
