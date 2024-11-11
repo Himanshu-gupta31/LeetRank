@@ -21,27 +21,22 @@ export async function POST(request:NextRequest) {
           }
         const leetcodeUrl=`https://alfa-leetcode-api.onrender.com/${username}/solved`;
         const leetcodeResponse=await fetch(leetcodeUrl)
-        const responsedata=await leetcodeResponse.json()
-        if(!responsedata.success || !responsedata.profileData){
-            return NextResponse.json(
-                { success: false, message: "Failed to fetch LeetCode data" },
-                { status: 500 }
-              );
-        }
-        const {solvedProblem,mediumSolved,hardSolved,easySolved}=responsedata.profileData;
+        const responsedata=await leetcodeResponse.json()       
+        const {solvedProblem,mediumSolved,hardSolved,easySolved}=responsedata;
         const questionsData=await prisma.ranking.create({
             data:{
                 userId:user.id,
-                totalques:solvedProblem,
-                easyques:easySolved,
-                mediumques:mediumSolved,
-                hardques:hardSolved
+                totalques:String(solvedProblem),
+                easyques:String(easySolved),
+                mediumques:String(mediumSolved),
+                hardques:String(hardSolved)
             }
         })
         return NextResponse.json({success:true,message:"Question Data Fetched Successfully",questionsData})
         
         
     } catch (error) {
+        console.log(error)
         return NextResponse.json(
             { success: false, message: "Internal Server Error" },
             { status: 500 }

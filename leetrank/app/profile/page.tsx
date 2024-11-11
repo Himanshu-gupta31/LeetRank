@@ -29,14 +29,15 @@ export default function Component({ searchParams }: { searchParams: Record<strin
   const [questionData, setQuestionData] = useState<QuestionData | null>(null)
   const [rank,setRank]=useState("")
   useEffect(() => {
-    if (username) {
-      fetchProfileData(username)
-      fetchQuestionsSolved(username)
+    if (username && college) {
+      fetchProfileData(username,college)
+      fetchQuestionsSolved(username,college)
+      fetchRank(username,college)
       
     }
   }, [username])
 
-  const fetchProfileData = async (username: string) => {
+  const fetchProfileData = async (username: string , college:string) => {
     try {
       const response = await fetch(`/api/fetchuserdetails?username=${username}&college=${college}`)
       const data = await response.json()
@@ -51,7 +52,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
     }
   }
 
-  const fetchQuestionsSolved = async (username: string) => {
+  const fetchQuestionsSolved = async (username: string,college:string) => {
     try {
       const response = await fetch(`/api/questionsolved?username=${username}&college=${college}`)
       const data = await response.json()
@@ -70,10 +71,14 @@ export default function Component({ searchParams }: { searchParams: Record<strin
       const response=await fetch(`api/rankingsystem?username=${username}&college=${college}`);
       const data=await response.json()
       if(data.success){
-       
+       setRank(data.userRank)
+      }
+      else{
+        setError(data.message)
       }
     } catch (error) {
-      
+      setError("An error occurred while fetching the college rank.")
+      console.error(error)
     }
   }
 
@@ -90,7 +95,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
               <div className="flex flex-col items-center space-y-4">
                 <Avatar className="w-24 h-24">
                   <AvatarImage src={profileData.avatar} alt={profileData.name} />
-                  <AvatarFallback>{profileData.name.charAt(0)}</AvatarFallback>
+                  
                 </Avatar>
                 <h2 className="text-2xl font-bold text-white">{profileData.name}</h2>
                 <p className="text-gray-400">@{profileData.username}</p>
@@ -158,7 +163,11 @@ export default function Component({ searchParams }: { searchParams: Record<strin
             ))}
           </div>
         )}
-        <div className="text-4xl font-bold pt-6">College Ranking</div>
+        <div className="text-4xl font-bold pt-6">
+          College Ranking
+         <div>{rank}</div>
+        </div>
+
       </div>
 
     </div>

@@ -1,12 +1,14 @@
 import { NextRequest,NextResponse } from "next/server";
 import prisma from "@/lib/db";
+import { SortDesc } from "lucide-react";
 export async function GET(request:NextRequest) {
     try {
         const {searchParams}=new URL(request.url)
         const college=searchParams.get("college")
-        if (!college) {
+        const username=searchParams.get("username")
+        if (!college || !username) {
             return NextResponse.json(
-              { success: false, message: "College not provided" },
+              { success: false, message: "College or Username not provided" },
               { status: 400 }
             );
           }
@@ -16,18 +18,29 @@ export async function GET(request:NextRequest) {
                     college,
                 },
             },
-            orderBy:[
-                {totalques:'desc'},
-                {hardques:'desc'},
-                {mediumques:'desc'},
-                {easyques:'desc'}
-            ],
+            
             include:{
                 user:true
             }
           });
-          return NextResponse.json({ success: true, rankedUser },{status:200});
+          const sortedrank=rankedUser.sort((a:any,b:any)=>
+            {
+                if(b.totalques!==a.totalques){
+                    return b.totalques-a.totalques
+                }
+                if(b.hardques!==a.hardques){
+                    return b.hardques-a.hardques
+                }
+                if(b.mediumques!==a.mediumques){
+                    return b.mediumques-a.mediumques
+                }
+                return b.easyques-a.easyques //  TODO:fiX Karna hai isko aaj
+            })
 
+          const userIndex=sortedrank.findIndex((user)=>user.user.username===username)
+          const userRank=userIndex!==-1 ? userIndex+1 : null
+          return NextResponse.json({ success: true, userRank },{status:200});
+       
     } catch (error) {
         return NextResponse.json(
             { success: false, message: "Internal Server Error" },

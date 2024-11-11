@@ -1,10 +1,10 @@
 "use client"
 
-import {  SignedOut, useUser,RedirectToSignIn } from "@clerk/nextjs"
+import {  SignedOut} from "@clerk/nextjs"
 import { ChartNoAxesCombined} from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import {  useState } from "react"
+
 
 export default function Navbar() {
   
