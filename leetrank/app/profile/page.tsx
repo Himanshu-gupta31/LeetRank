@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Trophy } from 'lucide-react'
 
 interface ProfileData {
   avatar: string
@@ -23,21 +24,21 @@ interface QuestionData {
 
 export default function Component({ searchParams }: { searchParams: Record<string, string | undefined> }) {
   const username = searchParams.username
-  const college=searchParams.college
+  const college = searchParams.college
   const [profileData, setProfileData] = useState<ProfileData | null>(null)
   const [error, setError] = useState("")
   const [questionData, setQuestionData] = useState<QuestionData | null>(null)
-  const [rank,setRank]=useState("")
+  const [rank, setRank] = useState("")
+
   useEffect(() => {
     if (username && college) {
-      fetchProfileData(username,college)
-      fetchQuestionsSolved(username,college)
-      fetchRank(username,college)
-      
+      fetchProfileData(username, college)
+      fetchQuestionsSolved(username, college)
+      fetchRank(username, college)
     }
-  }, [username])
+  }, [username, college])
 
-  const fetchProfileData = async (username: string , college:string) => {
+  const fetchProfileData = async (username: string, college: string) => {
     try {
       const response = await fetch(`/api/fetchuserdetails?username=${username}&college=${college}`)
       const data = await response.json()
@@ -52,7 +53,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
     }
   }
 
-  const fetchQuestionsSolved = async (username: string,college:string) => {
+  const fetchQuestionsSolved = async (username: string, college: string) => {
     try {
       const response = await fetch(`/api/questionsolved?username=${username}&college=${college}`)
       const data = await response.json()
@@ -66,14 +67,14 @@ export default function Component({ searchParams }: { searchParams: Record<strin
       console.error(error)
     }
   }
-  const fetchRank=async(username:string,college:string)=>{
+
+  const fetchRank = async (username: string, college: string) => {
     try {
-      const response=await fetch(`api/rankingsystem?username=${username}&college=${college}`);
-      const data=await response.json()
-      if(data.success){
-       setRank(data.userRank)
-      }
-      else{
+      const response = await fetch(`/api/rankingsystem?username=${username}&college=${college}`)
+      const data = await response.json()
+      if (data.success) {
+        setRank(data.userRank)
+      } else {
         setError(data.message)
       }
     } catch (error) {
@@ -89,34 +90,51 @@ export default function Component({ searchParams }: { searchParams: Record<strin
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="container mx-auto px-4 py-8">
-        <Card className="mb-8 bg-gray-900 border-gray-800">
-          <CardContent className="pt-6">
-            {profileData ? (
-              <div className="flex flex-col items-center space-y-4">
-                <Avatar className="w-24 h-24">
-                  <AvatarImage src={profileData.avatar} alt={profileData.name} />
-                  
-                </Avatar>
-                <h2 className="text-2xl font-bold text-white">{profileData.name}</h2>
-                <p className="text-gray-400">@{profileData.username}</p>
-                <Badge  className="bg-gray-700 text-gray-200">Rank: {profileData.ranking}</Badge>
-                <p className="text-sm text-gray-400">{profileData.country}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+          <Card className="bg-gray-900 border-gray-800">
+            <CardContent className="pt-6">
+              {profileData ? (
+                <div className="flex flex-col items-center space-y-4">
+                  <Avatar className="w-24 h-24">
+                    <AvatarImage src={profileData.avatar} alt={profileData.name} />
+                  </Avatar>
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold text-white">{profileData.name}</h2>
+                    <p className="text-gray-400">@{profileData.username}</p>
+                    <Badge className="mt-2 bg-gray-700 text-gray-200">Rank: {profileData.ranking}</Badge>
+                    <p className="text-sm text-gray-400 mt-2">{profileData.country}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center space-y-4">
+                  <Skeleton className="w-24 h-24 rounded-full bg-gray-700" />
+                  <Skeleton className="h-6 w-32 bg-gray-700" />
+                  <Skeleton className="h-4 w-24 bg-gray-700" />
+                  <Skeleton className="h-5 w-16 bg-gray-700" />
+                  <Skeleton className="h-4 w-20 bg-gray-700" />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="bg-gray-900 border-gray-800">
+            <CardContent className="pt-6">
+              <div className="flex flex-col items-center justify-center h-full">
+                <Trophy className="text-yellow-400 w-16 h-16 mb-4" />
+                <h2 className="text-2xl font-bold text-white mb-2">College Rank</h2>
+                {rank ? (
+                  <p className="text-yellow-400 font-bold text-4xl">{rank}</p>
+                ) : (
+                  <Skeleton className="h-10 w-16 bg-gray-700" />
+                )}
               </div>
-            ) : (
-              <div className="flex flex-col items-center space-y-4">
-                <Skeleton className="w-24 h-24 rounded-full bg-gray-700" />
-                <Skeleton className="h-6 w-32 bg-gray-700" />
-                <Skeleton className="h-4 w-24 bg-gray-700" />
-                <Skeleton className="h-5 w-16 bg-gray-700" />
-                <Skeleton className="h-4 w-20 bg-gray-700" />
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {questionData ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Card className="bg-gray-800 border-gray-200">
+            <Card className="bg-gray-800 border-gray-700">
               <CardHeader>
                 <CardTitle className="text-white">Total Solved</CardTitle>
               </CardHeader>
@@ -124,7 +142,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
                 <p className="text-4xl font-bold text-white">{questionData.solvedProblem}</p>
               </CardContent>
             </Card>
-            <Card className="bg-blue-700 border-blue-300">
+            <Card className="bg-blue-700 border-blue-600">
               <CardHeader>
                 <CardTitle className="text-blue-200">Easy</CardTitle>
               </CardHeader>
@@ -132,7 +150,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
                 <p className="text-4xl font-bold text-blue-200">{questionData.easySolved}</p>
               </CardContent>
             </Card>
-            <Card className="bg-orange-700 border-orange-300">
+            <Card className="bg-orange-700 border-orange-600">
               <CardHeader>
                 <CardTitle className="text-orange-200">Medium</CardTitle>
               </CardHeader>
@@ -140,7 +158,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
                 <p className="text-4xl font-bold text-orange-200">{questionData.mediumSolved}</p>
               </CardContent>
             </Card>
-            <Card className="bg-red-700 border-red-300">
+            <Card className="bg-red-700 border-red-600">
               <CardHeader>
                 <CardTitle className="text-red-200">Hard</CardTitle>
               </CardHeader>
@@ -163,13 +181,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
             ))}
           </div>
         )}
-        <div className="text-4xl font-bold pt-6">
-          College Ranking
-         <div>{rank}</div>
-        </div>
-
       </div>
-
     </div>
   )
 }

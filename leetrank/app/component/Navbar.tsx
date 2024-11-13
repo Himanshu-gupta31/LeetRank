@@ -1,6 +1,6 @@
 "use client"
 
-import {  SignedOut} from "@clerk/nextjs"
+import {  SignedIn, SignedOut, SignOutButton} from "@clerk/nextjs"
 import { ChartNoAxesCombined} from "lucide-react"
 import Link from "next/link"
 import {  useState } from "react"
@@ -20,16 +20,26 @@ export default function Navbar() {
             <ChartNoAxesCombined className="h-6 w-6" />
             <p className="font-bold pl-2">LeetRank</p>
           </div>
+          <SignedIn>
+            <SignOutButton>
+       <div className="flex items-center justify-end w-[6rem]">
+        <button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
+          Sign out
+        </button>
+       </div>
+       </SignOutButton>
+        
+      </SignedIn>
           <SignedOut>
           <div className="hidden md:block">
             <div className="ml-10 flex items-baseline space-x-4">
               <Link href="/sign-up">
-                <button className="bg-neutral-700 border border-black px-3 py-2 rounded-md hover:bg-neutral-600 transition-colors">
+                <button className="bg-neutral-700 border border-black px-3 py-2 rounded-md hover:bg-green-600 transition-colors">
                   Sign Up
                 </button>
               </Link>
               <Link href="/sign-in">
-                <button className="bg-neutral-700 border border-black px-4 py-2 rounded-md hover:bg-neutral-600 transition-colors">
+                <button className="bg-neutral-700 border border-black px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
                   Sign In
                 </button>
               </Link>
@@ -41,7 +51,8 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-
+      
+        
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
