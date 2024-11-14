@@ -26,9 +26,12 @@ export default function LeetCodeProfile() {
         }),
       });
       const data = await response.json();
+      if (data.redirect) {
+        router.push(data.redirect);
+      }
       if (data.success) {
         console.log("Details successfully registered:", data);
-        router.push(`/profile?username=${username}&collge=${college}`); // Redirect to the user's profile page
+        router.push(`/profile?username=${username}&collge=${college}`); 
       } else {
         console.error("Failed to register details:", data.message);
       }

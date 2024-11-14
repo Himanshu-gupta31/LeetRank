@@ -101,7 +101,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
                   <div className="text-center">
                     <h2 className="text-2xl font-bold text-white">{profileData.name}</h2>
                     <p className="text-gray-400">@{profileData.username}</p>
-                    <Badge className="mt-2 bg-gray-700 text-gray-200">Rank: {profileData.ranking}</Badge>
+                    <Badge className="mt-2 bg-gray-700 text-gray-200">Global Rank: {profileData.ranking}</Badge>
                     <p className="text-sm text-gray-400 mt-2">{profileData.country}</p>
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
           </Card>
 
           <Card className="bg-gray-900 border-gray-800">
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 h-full">
               <div className="flex flex-col items-center justify-center h-full">
                 <Trophy className="text-yellow-400 w-16 h-16 mb-4" />
                 <h2 className="text-2xl font-bold text-white mb-2">College Rank</h2>

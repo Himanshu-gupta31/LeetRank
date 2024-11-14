@@ -1,6 +1,6 @@
 import { NextRequest,NextResponse } from "next/server"
 import prisma from "@/lib/db"
-export async function POST(request:NextRequest,response:NextResponse) {
+export async function POST(request:NextRequest) {
     try {
         const {username,college}=await request.json()
         if(!username || !college){
@@ -10,7 +10,11 @@ export async function POST(request:NextRequest,response:NextResponse) {
             where:{username},
         })
         if(existingUser){
-            return NextResponse.json({success:false,message:"Username already Exist"},{status:400})
+            const redirectURL = `/profile?username=${username}&college=${college}`;
+            return NextResponse.json(
+                { success: false, redirect: redirectURL, message: "User already exists" },
+                { status: 200 }
+            );
         }
         const newUser=await prisma.user.create({
             data:{
