@@ -1,15 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
-interface RankedUser {
-  totalques: number;
-  hardques: number;
-  mediumques: number;
-  easyques: number;
-  user: {
-    username: string;
-  };
-}
+
 
 export async function GET(request: NextRequest) {
   try {
