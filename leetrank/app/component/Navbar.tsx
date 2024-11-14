@@ -8,7 +8,7 @@ import {  useState } from "react"
 
 export default function Navbar() {
   
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen] = useState(false)
   
   
 

@@ -1,6 +1,5 @@
 import { NextRequest,NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { SortDesc } from "lucide-react";
 export async function GET(request:NextRequest) {
     try {
         const {searchParams}=new URL(request.url)
