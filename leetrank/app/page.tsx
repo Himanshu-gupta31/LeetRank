@@ -64,7 +64,7 @@ export default function Home() {
 
         <section id="contact" className="text-center">
           <h2 className="text-3xl font-bold mb-4 text-green-300">Get in Touch</h2>
-          <p className="mb-4 ">Have questions or feedback? We'd love to hear from you!</p>
+          <p className="mb-4 ">Have questions or feedback? We`&apos;`d love to hear from you!</p>
           <Link href={"https://x.com/Himanshuu3112"}>
           <Button className='hover:bg-neutral-600 '>Contact Us</Button>
           </Link>
