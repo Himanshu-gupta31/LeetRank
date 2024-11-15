@@ -26,6 +26,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
+
+
+
 export async function POST(req: NextRequest) {
   try {
     const { clerkId, email, clerkusername } = await req.json();
@@ -40,14 +43,14 @@ export async function POST(req: NextRequest) {
         clerkId,
         email,
         clerkusername,
-        college: "default",
+        
       },
     });
     return NextResponse.json(newUser);
   } catch (error) {
     console.error("Error creating new user", error);
     return NextResponse.json(
-      { error: "Internal server error has occured!" },
+      { error: "Internal server error has occurred!" },
       { status: 500 }
     );
   }
