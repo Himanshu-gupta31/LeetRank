@@ -123,7 +123,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
                 <Trophy className="text-yellow-400 w-16 h-16 mb-4" />
                 <h2 className="text-2xl font-bold text-white mb-2">College Rank</h2>
                 {rank ? (
-                  <p className="text-yellow-400 font-bold text-4xl">{rank}</p>
+                  <p className="text-yellow-400 font-bold text-4xl">{rank ? rank : 'NA'}</p>
                 ) : (
                   <Skeleton className="h-10 w-16 bg-gray-700" />
                 )}

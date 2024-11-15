@@ -14,9 +14,12 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  username String @unique
-  college  String
+  id            String @id @default(cuid())
+  clerkId       String @unique
+  username      String @unique 
+  email         String @unique 
+  clerkusername String @unique 
+  college       String
 
   Ranking Ranking[]
 }
@@ -29,4 +32,6 @@ model Ranking {
   mediumques String
   easyques   String
   user       User   @relation(fields: [userId], references: [id])
+
+  @@unique([userId, id])
 }

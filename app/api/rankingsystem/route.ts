@@ -17,7 +17,6 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
-
     const rankedUser = await prisma.ranking.findMany({
       where: {
         user: {

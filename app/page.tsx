@@ -9,10 +9,14 @@ import { useUser } from '@clerk/nextjs'
 
 export default function Home() {
   const router=useRouter()
-  const {isSignedIn}=useUser()
+  const {isSignedIn,user}=useUser()
+  if (isSignedIn) {
+    const clerkId = user.id // not sure let's try this way
+    console.log(clerkId)
+  }
   useEffect(()=>{
      if(isSignedIn){
-      router.push("/home")
+      router.push("/dashboard")
      }
   },[isSignedIn])
   return (

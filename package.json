@@ -18,9 +18,11 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.453.0",
+    "micro": "^10.0.1",
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18",
+    "svix": "^1.40.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },
