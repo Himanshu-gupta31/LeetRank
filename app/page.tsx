@@ -56,15 +56,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="how-it-works" className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">How It Works</h2>
-          <ol className="list-decimal list-inside space-y-4">
-            <li>Enter your college name</li>
-            <li>Connect your LeetCode account</li>
-            <li>View your ranking and compare with peers</li>
-            <li>Track your progress over time</li>
-          </ol>
-        </section>
+        
 
         <section id="contact" className="text-center">
           <h2 className="text-3xl font-bold mb-4 text-green-300">Get in Touch</h2>
