@@ -1,40 +1,56 @@
 import { Webhook } from 'svix'
-import { buffer } from 'micro'
-import { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/db' 
-type EmailAddress = {
-    id: string
-    email_address: string
-  }
-  
-  type WebhookEvent = {
-    data: {
-      id: string
-      email_addresses: EmailAddress[]
-      primary_email_address_id: string
-      username?: string
-    }
-    object: 'event'
-    type: string
-  }
+import { headers } from 'next/headers'
+import { NextResponse } from 'next/server'
+import prisma from '@/lib/db'
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const rawBody = await buffer(req)
+type EmailAddress = {
+  id: string
+  email_address: string
+}
+
+type WebhookEvent = {
+  data: {
+    id: string
+    email_addresses: EmailAddress[]
+    primary_email_address_id: string
+    username?: string
+  }
+  object: 'event'
+  type: string
+}
+
+export async function POST(req: Request) {
+  const headersList = headers()
   const secret = process.env.CLERK_WEBHOOK_SECRET
 
   if (!secret) {
-    return res.status(500).json({ error: 'Missing Clerk webhook secret' })
+    console.error('Missing Clerk webhook secret')
+    return NextResponse.json(
+      { error: 'Missing Clerk webhook secret' },
+      { status: 500 }
+    )
   }
 
-  const webhook = new Webhook(secret)
-
   try {
-    const evt = webhook.verify(rawBody, req.headers as any) as WebhookEvent
+    // Get the raw body
+    const rawBody = await req.text()
+    
+    // Create webhook instance
+    const webhook = new Webhook(secret)
+    
+    // Verify the webhook
+    const evt = webhook.verify(rawBody, {
+      'svix-id': headersList.get('svix-id') || '',
+      'svix-timestamp': headersList.get('svix-timestamp') || '',
+      'svix-signature': headersList.get('svix-signature') || ''
+    }) as WebhookEvent
 
     if (evt.type === 'user.created') {
       const { id, email_addresses, username } = evt.data
 
-      const primaryEmail = email_addresses.find(email => email.id === evt.data.primary_email_address_id)
+      const primaryEmail = email_addresses.find(
+        email => email.id === evt.data.primary_email_address_id
+      )
 
       if (primaryEmail) {
         await prisma.user.create({
@@ -42,16 +58,24 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
             clerkId: id,
             email: primaryEmail.email_address,
             username: '',
-            clerkusername : username || primaryEmail.email_address.split('@')[0],
+            clerkusername: username || primaryEmail.email_address.split('@')[0],
             college: 'default',
           },
         })
+        
+        console.log(`Webhook processed successfully for email: ${primaryEmail.email_address}`)
       }
-      console.log(`Webhook successfully processed with ${primaryEmail}`)
     }
-    res.status(200).json({ message: 'Webhook processed successfully' })
+
+    return NextResponse.json(
+      { message: 'Webhook processed successfully' },
+      { status: 200 }
+    )
   } catch (err) {
     console.error('Error processing webhook:', err)
-    res.status(400).json({ error: 'Invalid webhook payload' })
+    return NextResponse.json(
+      { error: 'Invalid webhook payload' },
+      { status: 400 }
+    )
   }
 }
