@@ -2,13 +2,6 @@ import { Webhook } from 'svix'
 import { buffer } from 'micro'
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/db' 
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
 type EmailAddress = {
     id: string
     email_address: string
