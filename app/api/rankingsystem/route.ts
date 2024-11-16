@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
     });
 
     const userIndex = sortedRank.findIndex((user) => user.user.username === username);
-    const userRank = userIndex !== -1 ? userIndex + 1 : null;
+    const userRank = userIndex !== -1 ? userIndex + 1 : 1;
 
     return NextResponse.json({ success: true, userRank }, { status: 200 });
   } catch (error) {
