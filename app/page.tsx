@@ -36,7 +36,7 @@ export default function Home() {
         </section>
 
         <section id="features" className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Features</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Features:</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-gray-800 p-6 rounded-lg">
               <Trophy className="w-12 h-12 mb-4 text-yellow-400" />
