@@ -59,7 +59,6 @@ export async function POST(req: Request) {
             email: primaryEmail.email_address,
             username: '',
             clerkusername: username || primaryEmail.email_address.split('@')[0],
-            college: 'default',
           },
         })
         
