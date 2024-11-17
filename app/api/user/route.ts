@@ -26,9 +26,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-
-
-
 export async function POST(req: NextRequest) {
   try {
     const { clerkId, email, clerkusername } = await req.json();
@@ -38,15 +35,19 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    const newUser = await prisma.user.create({
-      data: {
+    const upsertedUser = await prisma.user.upsert({
+      where : {clerkId : clerkId},
+      update : {
+        email,
+        clerkusername
+      },
+      create : {
         clerkId,
         email,
-        clerkusername,
-        
-      },
-    });
-    return NextResponse.json(newUser);
+        clerkusername
+      }
+    })
+    return NextResponse.json(upsertedUser);
   } catch (error) {
     console.error("Error creating new user", error);
     return NextResponse.json(
