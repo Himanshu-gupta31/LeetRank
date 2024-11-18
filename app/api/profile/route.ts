@@ -4,7 +4,7 @@ import { getAuth } from "@clerk/nextjs/server";
 export async function POST(request: NextRequest) {
   try {
     // changing this api to set the college and leetcode username for the user using their clerkId
-    const { username, college } = await request.json();
+    const { username, collegeId } = await request.json();
     const { userId } = getAuth(request);
     if (!userId) {
       return NextResponse.json(
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       },
       data: {
         username: username,
-        college: college,
+        collegeId : collegeId
       },
     });
     return NextResponse.json(res);
