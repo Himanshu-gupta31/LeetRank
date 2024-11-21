@@ -48,7 +48,7 @@ export default function Dashboard() {
         },
         body: JSON.stringify({
           username: username,
-          college: selectedCollege?.name || college,
+          collegeId: selectedCollege?.id || college,
         }),
       })
       const data = await response.json()
