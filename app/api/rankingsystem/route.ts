@@ -19,9 +19,7 @@ export async function GET(request: NextRequest) {
     }
     const rankedUser = await prisma.ranking.findMany({
       where: {
-        user: {
-          college,
-        },
+       
       },
       include: {
         user: true,

@@ -1,11 +1,9 @@
+import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-
+import prisma from "@/lib/db";
 const userProfileQuery = `#graphql
 query getUserProfile($username: String!) {
-    allQuestionsCount {
-        difficulty
-        count
-    }
+    
     matchedUser(username: $username) {
         username
         githubUrl
@@ -30,22 +28,8 @@ query getUserProfile($username: String!) {
             aboutMe
             starRating
         }
-        badges {
-            id
-            displayName
-            icon
-            creationDate
-        }
-        upcomingBadges {
-            name
-            icon
-        }
-        activeBadge {
-            id
-            displayName
-            icon
-            creationDate
-        }
+        
+        
         submitStats {
             totalSubmissionNum {
                 difficulty
@@ -60,13 +44,7 @@ query getUserProfile($username: String!) {
         }
         submissionCalendar
     }
-    recentSubmissionList(username: $username, limit: 20) {
-        title
-        titleSlug
-        timestamp
-        statusDisplay
-        lang
-    }
+    
 }`;
 
 const languageStatsQuery = `#graphql
@@ -103,15 +81,20 @@ async function fetchLeetCodeData(username: string, query: string) {
 
 export async function GET(req: NextRequest) {
   const { userId } = getAuth(req);
-  const leetcodeusername = await prisma.user.findUnique({
+  if(!userId){
+    return NextResponse.json({
+      message:"User Id cannot be null"
+    },{status:400})
+  }
+  const profile = await prisma.user.findUnique({
     where : {
       clerkId : userId
     }, select : {
-      // leetcodeusername
+      username:true
     }
   })
 
-  if (!username) {
+  if (!profile) {
     return NextResponse.json({
       message: "Please provide a LeetCode username.",
     }, { status: 400 });
@@ -119,8 +102,8 @@ export async function GET(req: NextRequest) {
 
   try {
     const [userProfileData, languageStatsData] = await Promise.all([
-      fetchLeetCodeData(username, userProfileQuery),
-      fetchLeetCodeData(username, languageStatsQuery)
+      fetchLeetCodeData(profile.username, userProfileQuery),
+      fetchLeetCodeData(profile.username, languageStatsQuery)
     ]);
 
     return NextResponse.json({

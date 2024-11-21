@@ -8,11 +8,33 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Trophy } from 'lucide-react'
 
 interface ProfileData {
-  avatar: string
-  username: string
-  name: string
-  ranking: number
-  country: string
+userProfile: {
+    matchedUser: {
+      username: string,
+      githubUrl: string | null,
+      twitterUrl: string | null,
+      linkedinUrl: string | null,
+      contributions: {
+        points: number,
+        questionCount: number,
+        testcaseCountnumber: number
+      },
+      profile: {
+        realName: string | null,
+        userAvatar: string | null,
+        birthday:  Date |null,
+        ranking: number,
+        reputation: 0,
+        websites: [],
+        countryName:string | null,
+        company: string | null,
+        school: string |null,
+        skillTags: [],
+        aboutMe: string | null,
+        starRating: number
+      }
+    }
+  }
 }
 
 interface QuestionData {
@@ -25,25 +47,25 @@ interface QuestionData {
 export default function Component({ searchParams }: { searchParams: Record<string, string | undefined> }) {
   const username = searchParams.username
   const college = searchParams.college
-  const [profileData, setProfileData] = useState<ProfileData | null>(null)
+  const [profile, setProfile] = useState<ProfileData | null>(null)
   const [error, setError] = useState("")
   const [questionData, setQuestionData] = useState<QuestionData | null>(null)
   const [rank, setRank] = useState("")
 
   useEffect(() => {
     if (username && college) {
-      fetchProfileData(username, college)
+      fetchProfileData()
       fetchQuestionsSolved(username, college)
       fetchRank(username, college)
     }
   }, [username, college])
 
-  const fetchProfileData = async (username: string, college: string) => {
+  const fetchProfileData = async () => {
     try {
-      const response = await fetch(`/api/fetchuserdetails?username=${username}&college=${college}`)
+      const response = await fetch("/api/leetcodedata")
       const data = await response.json()
       if (data.success) {
-        setProfileData(data.profileData)
+        setProfile(data)
       } else {
         setError(data.message)
       }
@@ -58,7 +80,7 @@ export default function Component({ searchParams }: { searchParams: Record<strin
       const response = await fetch(`/api/questionsolved?username=${username}&college=${college}`)
       const data = await response.json()
       if (data.success) {
-        setQuestionData(data.profileData)
+        setQuestionData(data.profileData.matchedUser)
       } else {
         setError(data.message)
       }
@@ -93,16 +115,16 @@ export default function Component({ searchParams }: { searchParams: Record<strin
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <Card className="bg-gray-900 border-gray-800">
             <CardContent className="pt-6">
-              {profileData ? (
+              {profile ? (
                 <div className="flex flex-col items-center space-y-4">
                   <Avatar className="w-24 h-24">
-                    <AvatarImage src={profileData.avatar} alt={profileData.name} />
+                    <AvatarImage src={profile?.userProfile} alt={profile?.realName} />
                   </Avatar>
                   <div className="text-center">
-                    <h2 className="text-2xl font-bold text-white">{profileData.name}</h2>
-                    <p className="text-gray-400">@{profileData.username}</p>
-                    <Badge className="mt-2 bg-gray-700 text-gray-200">Global Rank: {profileData.ranking}</Badge>
-                    <p className="text-sm text-gray-400 mt-2">{profileData.country}</p>
+                    <h2 className="text-2xl font-bold text-white">{profile.realName}</h2>
+                    <p className="text-gray-400">@{profile.username}</p>
+                    <Badge className="mt-2 bg-gray-700 text-gray-200">Global Rank: {profile.ranking}</Badge>
+                    <p className="text-sm text-gray-400 mt-2">{profile.profile.countryName}</p>
                   </div>
                 </div>
               ) : (
