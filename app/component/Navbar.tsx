@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
 import { ChartNoAxesCombined } from "lucide-react";
 import Link from "next/link";
@@ -22,13 +23,20 @@ export default function Navbar() {
           </div>
 
           <SignedIn>
-            <SignOutButton>
-              <div className="flex items-center justify-end w-[6rem]">
-                <button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
-                  Sign out
-                </button>
-              </div>
-            </SignOutButton>
+            <div className="flex justify-center items-center space-x-2">
+            <Link href={"/profile"}>
+                <Button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
+                  Profile
+                </Button>
+              </Link>
+              <SignOutButton>
+                <div className="flex items-center justify-end w-[6rem]">
+                  <button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
+                    Sign out
+                  </button>
+                </div>
+              </SignOutButton>
+            </div>
           </SignedIn>
 
           <SignedOut>
