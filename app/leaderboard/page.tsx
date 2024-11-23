@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useSearchParams } from "next/navigation"
 
 interface LeaderboardData {
   userRank: number
@@ -20,6 +21,8 @@ interface LeaderboardData {
 export default function Leaderboard() {
   const [data, setData] = useState<LeaderboardData | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const searchParams=useSearchParams();
+  const college=searchParams.get("college")
 
   useEffect(() => {
     const fetchLeaderboard = async () => {

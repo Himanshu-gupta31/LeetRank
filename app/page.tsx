@@ -4,12 +4,15 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Trophy, Users, Zap } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 
 export default function Home() {
+  const bgColour=['bg-red-500/20', 'bg-blue-500/20', 'bg-green-500/20', 'bg-yellow-500/20', 
+  'bg-purple-500/20', 'bg-pink-500/20', 'bg-indigo-500/20', 'bg-teal-500/20']
   const router=useRouter()
   const {isSignedIn,user}=useUser()
+  const [grid,setGrid]=useState(Array(64).fill('bg-transparent'))
   if (isSignedIn) {
     const clerkId = user.id // not sure let's try this way
     console.log(clerkId)
@@ -19,14 +22,29 @@ export default function Home() {
       router.push("/dashboard")
      }
   },[isSignedIn])
+  useEffect(()=>{
+    const intervalId=setInterval(()=>{
+      setGrid(prevcolour=>{
+        return prevcolour.map(()=>
+        Math.random() > 0.7 ? bgColour[Math.floor(Math.random() * bgColour.length)] : 'bg-transparent'
+        )
+      })
+    },3000)
+  },[])
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white relative">
+      <div className='absolute inset-0 grid grid-cols-8 grid-rows-8 z-0'>
+        {grid.map((colour,index)=>(
+         <div key={index}
+         className={`transition-colors duration-1000 ${colour} border border-gray-800/20`}/>
+        ))}
+      </div>
       
-
+ 
       <main className="container mx-auto px-4 py-12">
-        <section className="text-center mb-16">
+        <section className="text-center mb-16 mt-6">
           <h1 className="text-5xl font-bold mb-4">Discover Your LeetCode College Rank</h1>
-          <p className="text-xl mb-8">Compare your LeetCode performance with peers from your college</p>
+          <p className="text-xl mb-12">Compare your LeetCode performance with peers from your college</p>
           <div className="flex justify-center space-x-4">
             <Input type="text" placeholder="Enter your college name" className="max-w-xs" />
             <Link href={"/sign-in"}>
