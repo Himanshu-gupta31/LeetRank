@@ -15,7 +15,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { GraduationCap, Loader2 } from 'lucide-react'
-import { DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuTrigger,
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 interface College {
@@ -26,10 +30,17 @@ interface College {
   country: string
 }
 
+interface DbUser {
+  clerkusername: string
+  username: string | null
+  college: string | null
+}
+
 export default function Dashboard() {
-  const { user } = useUser()
-  const [dbUser, setDbUser] = useState(null)
+  const { user, isLoaded: isClerkLoaded } = useUser()
+  const [dbUser, setDbUser] = useState<DbUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [username, setUsername] = useState("")
   const [college, setCollege] = useState("")
   const [isFormSubmitted, setIsFormSubmitted] = useState(false)
@@ -52,21 +63,17 @@ export default function Dashboard() {
         }),
       })
       const data = await response.json()
-      if (response.ok) {
-        console.log("Correctly updated college and lcusername", data.data)
-        router.push(
-          `/profile?username=${data.username}&college=${data.college}`
-        )
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update profile")
       }
+
       if (data.success) {
-        console.log("Details successfully registered:", data)
         router.push(`/profile?username=${username}&college=${selectedCollege?.name || college}`)
-      } else {
-        console.error("Failed to register details:", data.message)
-        setIsFormSubmitted(false)
       }
     } catch (error) {
       console.error("An error occurred:", error)
+      setError(error instanceof Error ? error.message : "An error occurred")
       setIsFormSubmitted(false)
     }
   }
@@ -74,87 +81,74 @@ export default function Dashboard() {
   const fetchColleges = async () => {
     try {
       const response = await fetch("/api/college")
+      if (!response.ok) {
+        throw new Error("Failed to fetch colleges")
+      }
       const data = await response.json()
       setColleges(data)
     } catch (error) {
       console.error("Unable to fetch colleges", error)
+      setError("Failed to load colleges")
+    }
+  }
+
+  const fetchUser = async (clerkId: string) => {
+    try {
+      const response = await fetch(`/api/user?clerkId=${clerkId}`)
+      if (!response.ok) {
+        throw new Error("Failed to fetch user details")
+      }
+      const data = await response.json()
+      setDbUser(data.user)
+    } catch (error) {
+      console.error("Unable to fetch user details:", error)
+      setError("Failed to load user details")
+    } finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchColleges()
-  }, [])
-
-  useEffect(() => {
-    async function fetchOrCreateUser() {
-      if (user) {
-        try {
-          const createRes = await fetch("/api/user", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              clerkId: user.id,
-              email: user.primaryEmailAddress?.emailAddress,
-              clerkusername: user.username || user.firstName || "User",
-            }),
-          })
-          if (createRes.ok) {
-            const upsertedUser = await createRes.json()
-            setDbUser(upsertedUser)
-            setUsername(upsertedUser.username || "")
-            setCollege(upsertedUser.college || "")
-            if (upsertedUser.username && upsertedUser.college) {
-              setIsFormSubmitted(true)
-            }
-          } else {
-            console.error("Failed to upsert user!")
-          }
-        } catch (error) {
-          console.error("Error upserting user!", error)
-        } finally {
-          setLoading(false)
-        }
-      }
+    if (isClerkLoaded && user?.id) {
+      fetchUser(user.id)
+      fetchColleges()
+    } else if (isClerkLoaded && !user) {
+      setLoading(false)
+      setError("Please sign in to continue")
     }
-    fetchOrCreateUser()
-  }, [user, router])
+  }, [isClerkLoaded, user])
 
-  if (loading || !user || !dbUser) {
+  if (!isClerkLoaded || loading) {
     return (
-      <div className="flex justify-center items-center">
-        <Loader2 color="white" className="animate-spin" />
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="animate-spin" />
       </div>
     )
   }
 
-  function RedirectIfUsernameAndCollege() {
-    useEffect(() => {
-      if (dbUser.username && dbUser.college) {
-        router.push(`/profile?username=${username}&college=${college}`)
-      }
-    }, [])
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-red-500">Error</CardTitle>
+            <CardDescription>{error}</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    )
+  }
+
+  if (dbUser?.username && dbUser?.college) {
+    router.push(`/profile`)
     return null
   }
 
   return (
     <div className="flex flex-col space-y-2 justify-center items-center bg-gradient-to-br from-gray-900 to-black p-4 min-h-screen">
-      <Card className="w-full max-w-5xl">
-        <CardHeader>
-          <CardTitle>Welcome, {dbUser.clerkusername}!</CardTitle>
-          <CardDescription>Email: {dbUser.email}</CardDescription>
-          <CardDescription>Clerk ID: {user.id}</CardDescription>
-          <CardDescription>LC username: {dbUser.username}</CardDescription>
-          <CardDescription>
-            College: {dbUser.college === "default" ? "Not set" : dbUser.college}
-          </CardDescription>
-        </CardHeader>
-      </Card>
-      <RedirectIfUsernameAndCollege />
       {!isFormSubmitted && (
         <Card className="w-full max-w-5xl">
-          <CardHeader className="">
+          <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
               LeetCode Profile
             </CardTitle>
@@ -193,7 +187,6 @@ export default function Dashboard() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {/* // have to create a POST request for this one */}
                 {!selectedCollege && (
                   <Input
                     id="college"

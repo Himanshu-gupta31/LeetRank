@@ -6,6 +6,8 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Trophy } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 interface ProfileData {
   userProfile: {
@@ -63,7 +65,7 @@ interface ProfileData {
 export default function Component() {
   const [profile, setProfile] = useState<ProfileData | null>(null)
   const [error, setError] = useState("")
-  const [rank, setRank] = useState<string | null>(null)
+  const [rank, setRank] = useState<string | null>("2")
 
   const fetchProfileData = async () => {
     try {
@@ -76,30 +78,9 @@ export default function Component() {
     }
   }
 
-  const fetchRank = async (username: string, college: string) => {
-    try {
-      const response = await fetch(`/api/rankingsystem?username=${username}&college=${encodeURIComponent(college)}`)
-      const data = await response.json()
-      if (data.success) {
-        setRank(data.userRank)
-      } else {
-        setError(data.message)
-      }
-    } catch (error) {
-      setError("An error occurred while fetching the college rank.")
-      console.error(error)
-    }
-  }
-
   useEffect(() => {
     fetchProfileData()
   }, [])
-
-  useEffect(() => {
-    if (profile) {
-      fetchRank(profile.username, profile.collegeData.name)
-    }
-  }, [profile])
 
   if (error) {
     return <div className="text-center text-red-400 font-semibold mt-8">{error}</div>
@@ -150,6 +131,9 @@ export default function Component() {
                 ) : (
                   <Skeleton className="h-10 w-16 bg-gray-700" />
                 )}
+                <Link href={"/leaderboard"}>
+                <Button className="my-2 px-4 bg-white hover:bg-black hover:text-white text-gray-800 font-semibold">Leaderboard</Button>
+                </Link>
               </div>
             </CardContent>
           </Card>

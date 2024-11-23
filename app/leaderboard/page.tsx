@@ -45,15 +45,15 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card className="bg-gray-900 border-gray-800 mb-8">
+    <div className="mx-auto px-4 py-8 min-h-screen bg-gray-900">
+      <Card className="bg-gray-900 border-none mb-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-white">Leaderboard</CardTitle>
         </CardHeader>
         <CardContent>
           {data ? (
             <>
-              <p className="text-gray-400 mb-2">College: {data.collegeName}</p>
+              <p className="text-gray-200 mb-2">College: {data.collegeName}</p>
               <div className="flex justify-between items-center mb-4">
                 <Badge variant="secondary">Your Rank: {data.userRank}</Badge>
                 <Badge variant="secondary">Total Users: {data.totalUsers}</Badge>

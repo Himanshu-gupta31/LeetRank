@@ -90,6 +90,32 @@ export async function GET(req: NextRequest) {
             try {
                 const leetcodedata = await fetchLeetCodeData(user.username)
                 const score = calculateScore(leetcodedata.data.matchedUser.submitStats)
+                const existingRanking = await prisma.ranking.findFirst({
+                  where : {
+                    username : user.username,
+                    collegeId : profile.college.id
+                  }
+                })
+
+                if (existingRanking) {
+                  // if exists then update the existing ranking
+                  await prisma.ranking.update({
+                    where : {
+                      id : existingRanking.id
+                    },data : {
+                      score : score
+                    }
+                  })
+                } else {
+                  await prisma.ranking.create({
+                    data : {
+                      username : user.username,
+                      collegeId : profile.college.id,
+                      score : score
+                    }
+                  })
+                }
+
                 return {username : user.username,score}
             } catch (error) {
                 console.error(`Error fetching data for ${user.username}`,error)
@@ -98,18 +124,41 @@ export async function GET(req: NextRequest) {
         })
     )
 
-    const sortedUsers = userScores.sort((a,b) => b.score - a.score)
-    const userRank = userScores.findIndex((user) => user.username === profile.username) + 1;
+    // const sortedUsers = userScores.sort((a,b) => b.score - a.score)
+    // const userRank = userScores.findIndex((user) => user.username === profile.username) + 1;
 
-    const leaderboard = sortedUsers.map((user,index) => ({
-        rank : index + 1,
-        username : user.username,
-        score : user.score
+    // const leaderboard = sortedUsers.map((user,index) => ({
+    //     rank : index + 1,
+    //     username : user.username,
+    //     score : user.score
+    // }))
+
+    const rankings = await prisma.ranking.findMany({
+      where : {
+        collegeId : profile.college.id
+      },
+      orderBy : {
+        score : 'desc'
+      },
+      include : {
+        user : {
+          select : {
+            username : true
+          }
+        }
+      }
+    })
+
+    const userRank = rankings.findIndex((rank) => rank.username === profile.username) + 1;
+    const leaderboard = rankings.map((rank,index) => ({
+      rank : index + 1,
+      username : rank.user.username,
+      score : rank.score || 0
     }))
 
     return NextResponse.json({
         userRank,
-        totalUsers: sortedUsers.length,
+        totalUsers: rankings.length,
         leaderboard,
         collegeName: profile.college.name,
       });
