@@ -29,7 +29,7 @@ export default function Home() {
         Math.random() > 0.7 ? bgColour[Math.floor(Math.random() * bgColour.length)] : 'bg-transparent'
         )
       })
-    },3000)
+    },2000)
   },[])
   return (
     <div className="min-h-screen bg-black text-white relative">
@@ -48,7 +48,7 @@ export default function Home() {
           <div className="flex justify-center space-x-4">
             <Input type="text" placeholder="Enter your college name" className="max-w-xs" />
             <Link href={"/sign-in"}>
-            <Button className='bg-neutral-600'>Get Ranking</Button>
+            <Button className='bg-neutral-600 z-10'>Get Ranking</Button>
             </Link>
           </div>
         </section>
@@ -78,9 +78,9 @@ export default function Home() {
 
         <section id="contact" className="text-center">
           <h2 className="text-3xl font-bold mb-4 text-green-300">Get in Touch</h2>
-          <p className="mb-4 ">Have questions or feedback? We`&apos;`d love to hear from you!</p>
+          <p className="mb-4 ">Have questions or feedback? We&apos;d love to hear from you!</p>
           <Link href={"https://x.com/Himanshuu3112"}>
-          <Button className='hover:bg-neutral-600 '>Contact Us</Button>
+          <Button className='hover:bg-red-200 '>Contact Us</Button>
           </Link>
         </section>
       </main>

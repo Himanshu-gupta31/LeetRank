@@ -11,12 +11,15 @@ export async function GET(req: NextRequest) {
   try {
     const user = await prisma.user.findUnique({
       where: { clerkId: clerkId as string },
+      include:{
+        college:true
+      }
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found!" }, { status: 404 });
     }
-    return NextResponse.json(user);
+    return NextResponse.json({user,college:user.college.name});
   } catch (error) {
     console.error("Error fetching the user", error);
     return NextResponse.json(
