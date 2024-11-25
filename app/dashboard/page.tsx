@@ -68,8 +68,8 @@ export default function Dashboard() {
         throw new Error(data.error || "Failed to update profile");
       }
 
-      if (data.success) {
-        router.push(`/profile?username=${username}&college=${selectedCollege.name}`);
+      if (response.ok) {
+        router.push(`/profile`);
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -98,6 +98,7 @@ export default function Dashboard() {
 
   const fetchUser = async (clerkId: string) => {
     try {
+      setLoading(true)
       const response = await fetch(`/api/user?clerkId=${clerkId}`);
       if (!response.ok) {
         throw new Error("Please sign up again");
@@ -128,7 +129,6 @@ export default function Dashboard() {
     }
   }, [isClerkLoaded, user]);
 
-  // Close college list when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
