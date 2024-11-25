@@ -129,7 +129,6 @@ export default function Dashboard() {
     }
   }, [isClerkLoaded, user]);
 
-  // Close college list when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
