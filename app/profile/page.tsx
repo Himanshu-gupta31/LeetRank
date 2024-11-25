@@ -75,7 +75,7 @@ interface ProfileData {
 export default function Component() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [error, setError] = useState("");
-  const [rank, setRank] = useState<string | null>("2");
+  const [rank, setRank] = useState<string | null>("");
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [username, setUsername] = useState("");
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -95,9 +95,24 @@ export default function Component() {
       router.push('/dashboard')      
     }
   };
-
+  const userRanking=async()=>{
+    try {
+      const response=await fetch("api/rankingsystem")
+      const data=await response.json();
+      if(response.ok){
+        setRank(data.userRank)
+      }
+      else{
+        setRank("0")
+      }
+    } catch (error) {
+      setError("An error occured while fetching user rank")
+      console.log(error)
+    }
+  }
   useEffect(() => {
     fetchProfileData();
+    userRanking()
   }, []);
 
   if (error) {
