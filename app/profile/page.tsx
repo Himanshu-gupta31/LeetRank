@@ -85,9 +85,6 @@ export default function Component() {
     try {
       const response = await fetch("/api/leetcodedata");
       const data = await response.json();
-      if (!data.userProfile.matchedUser) {
-        // in place of leetcode username show invalid username and give an input to re-enter the correct username
-      }
       setProfile(data);
     } catch (error) {
       setError("An error occurred while fetching the profile details.");
@@ -255,7 +252,7 @@ export default function Component() {
                   College Rank
                 </h2>
                 {rank !== null ? (
-                  <p className="text-yellow-400 font-bold text-4xl">{rank}</p>
+                  <p className="text-yellow-400 font-bold text-4xl">{rank === "0" ? 'Click on the leaderboard button to check out your rank!' : rank}</p>
                 ) : (
                   <Skeleton className="h-10 w-16 bg-gray-700" />
                 )}
