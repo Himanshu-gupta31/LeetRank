@@ -115,8 +115,8 @@ export async function GET(req: NextRequest) {
     ]);
 
     return NextResponse.json({
-      userProfile: userProfileData.data,
-      languageStats: languageStatsData.data,
+      userProfile: userProfileData.data || null,
+      languageStats: languageStatsData.data || null,
       collegeData :  profile.college || "Not able to fetch college data", 
       username : profile.username || "Not able to fetch username"
     });
@@ -124,8 +124,10 @@ export async function GET(req: NextRequest) {
     console.error("Error fetching LeetCode data:", error);
     return NextResponse.json(
       {
-        message: "An error occurred while fetching LeetCode data.",
-      },
+        userProfile: null,
+        languageStats: null,
+        collegeData :  profile.college || "Not able to fetch college data", 
+        username : profile.username || "Not able to fetch username"      },
       { status: 500 }
     );
   }
