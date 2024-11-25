@@ -98,6 +98,7 @@ export default function Dashboard() {
 
   const fetchUser = async (clerkId: string) => {
     try {
+      setLoading(true)
       const response = await fetch(`/api/user?clerkId=${clerkId}`);
       if (!response.ok) {
         throw new Error("Please sign up again");
