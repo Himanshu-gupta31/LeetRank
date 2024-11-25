@@ -1,7 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,6 +15,9 @@ import { Edit, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import EditCollegeModal from "../component/EditCollege";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 
 interface ProfileData {
   userProfile: {
@@ -67,16 +76,23 @@ export default function Component() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [error, setError] = useState("");
   const [rank, setRank] = useState<string | null>("2");
-  const [openModal,setOpenModal] = useState<boolean>(false)
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [username, setUsername] = useState("");
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const router = useRouter()
 
   const fetchProfileData = async () => {
     try {
       const response = await fetch("/api/leetcodedata");
       const data = await response.json();
+      if (!data.userProfile.matchedUser) {
+        // in place of leetcode username show invalid username and give an input to re-enter the correct username
+      }
       setProfile(data);
     } catch (error) {
       setError("An error occurred while fetching the profile details.");
       console.error(error);
+      router.push('/dashboard')      
     }
   };
 
@@ -91,13 +107,43 @@ export default function Component() {
   }
 
   const questionData =
-    profile?.userProfile.matchedUser.submitStats.acSubmissionNum.reduce(
+    profile?.userProfile?.matchedUser?.submitStats?.acSubmissionNum?.reduce(
       (acc, curr) => {
         acc[curr.difficulty.toLowerCase()] = curr.count;
         return acc;
       },
       {} as Record<string, number>
     );
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsFormSubmitted(true);
+    try {
+      const response = await fetch("/api/profile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          collegeId: profile.collegeData.id,
+        }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update profile");
+      }
+
+      if (response.ok) {
+        fetchProfileData()
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      setError(error instanceof Error ? error.message : "An error occurred");
+      setIsFormSubmitted(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -110,35 +156,66 @@ export default function Component() {
                   <Avatar className="w-24 h-24">
                     <AvatarImage
                       src={
-                        profile.userProfile.matchedUser.profile.userAvatar || ""
+                        profile?.userProfile?.matchedUser?.profile
+                          ?.userAvatar || ""
                       }
                       alt={
-                        profile.userProfile.matchedUser.profile.realName || ""
+                        profile?.userProfile?.matchedUser?.profile?.realName ||
+                        ""
                       }
                     />
                   </Avatar>
                   <div className="text-center">
+                    {!profile?.userProfile?.matchedUser?.profile && (
+                      <div>
+                        <form onSubmit={handleSubmit}>
+                          <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="username" className="text-white font-semibold">
+                                Please enter the correct username
+                              </Label>
+                              <Input
+                                id="username"
+                                className="text-white"
+                                placeholder="Enter your LeetCode username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                              />
+                            </div>
+                          </CardContent>
+                          <CardFooter>
+                            <Button className="w-full" type="submit">
+                              Update username
+                            </Button>
+                          </CardFooter>
+                        </form>
+                      </div>
+                    )}
                     <h2 className="text-2xl font-bold text-white">
-                      {profile.userProfile.matchedUser.profile.realName}
+                      {profile?.userProfile?.matchedUser?.profile?.realName ||
+                        "Invalid username"}
                     </h2>
                     <p className="text-gray-400">
-                      @{profile.userProfile.matchedUser.username}
+                      @
+                      {profile?.userProfile?.matchedUser?.username ||
+                        "Invalid Username"}
                     </p>
                     <Badge className="mt-2 bg-gray-700 text-gray-200">
                       Global Rank:{" "}
-                      {profile.userProfile.matchedUser.profile.ranking}
+                      {profile?.userProfile?.matchedUser?.profile?.ranking}
                     </Badge>
                     <p className="text-sm text-gray-400 mt-2">
-                      {profile.userProfile.matchedUser.profile.countryName}
+                      {profile?.userProfile?.matchedUser?.profile?.countryName}
                     </p>
                     <div className="flex space-x-4 justify-center items-center">
                       <p className="text-sm font-semibold text-gray-400">
-                        {profile.collegeData.name}
+                        {profile?.collegeData?.name}
                       </p>
-                      <EditCollegeModal 
-                      currentCollege={profile.collegeData}
-                      username={profile.username}
-                      onUpdate={fetchProfileData}
+                      <EditCollegeModal
+                        currentCollege={profile?.collegeData}
+                        username={profile?.username}
+                        onUpdate={fetchProfileData}
                       />
                     </div>
                   </div>

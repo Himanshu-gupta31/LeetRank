@@ -68,8 +68,8 @@ export default function Dashboard() {
         throw new Error(data.error || "Failed to update profile");
       }
 
-      if (data.success) {
-        router.push(`/profile?username=${username}&college=${selectedCollege.name}`);
+      if (response.ok) {
+        router.push(`/profile`);
       }
     } catch (error) {
       console.error("An error occurred:", error);
