@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 
 interface College {
   id: string;
@@ -30,6 +31,13 @@ interface DbUser {
   college: string | null;
 }
 
+interface AddCollegeForm {
+  collegeName: string;
+  area: string;
+  state: string;
+  country: string;
+}
+
 export default function Dashboard() {
   const { user, isLoaded: isClerkLoaded } = useUser();
   const [dbUser, setDbUser] = useState<DbUser | null>(null);
@@ -42,6 +50,10 @@ export default function Dashboard() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [isCollegesLoading, setIsCollegesLoading] = useState(true);
   const [showCollegeList, setShowCollegeList] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
+  const [inputCollege, setInputCollege] = useState<AddCollegeForm>();
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,7 +110,7 @@ export default function Dashboard() {
 
   const fetchUser = async (clerkId: string) => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await fetch(`/api/user?clerkId=${clerkId}`);
       if (!response.ok) {
         throw new Error("Please sign up again");
@@ -132,14 +144,133 @@ export default function Dashboard() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
-      if (!target.closest('#college-search-container')) {
+      if (!target.closest("#college-search-container")) {
         setShowCollegeList(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  
+interface CollegeInput {
+  collegeName: string;
+  area: string;
+  state: string;
+  country: string;
+}
+
+function AddCollegeModal() {
+  const [inputCollege, setInputCollege] = useState<CollegeInput>({
+    collegeName: '',
+    area: '',
+    state: '',
+    country: ''
+  });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setInputCollege(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleAddCollege = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/addCollege', {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inputCollege)
+      });
+
+      if (res.ok) {
+        setIsModalOpen(false);
+        setInputCollege({
+          collegeName: '',
+          area: '',
+          state: '',
+          country: ''
+        });
+        fetchColleges()
+      } else {
+        const errorData = await res.json();
+        console.error("Unable to add Colge",errorData)
+      }
+    } catch (error) {
+      console.error("Error in adding college:", error);
+    }
+  };
+
+  return (
+    <>
+      <div className="flex space-x-4 justify-start items-center">
+        <p>Can't find your college?</p>
+        <Button onClick={() => setIsModalOpen(true)}>Add your college!</Button>
+      </div>
+
+      <Dialog 
+        open={isModalOpen} 
+        onOpenChange={setIsModalOpen}
+      >
+        <DialogContent>
+          <form onSubmit={handleAddCollege}>
+            <div>
+              <Label>College Name:</Label>
+              <Input 
+                name="collegeName"
+                value={inputCollege.collegeName} 
+                onChange={handleInputChange} 
+                placeholder="Enter your college name" 
+                required 
+              />
+            </div>
+            <div>
+              <Label>Area:</Label>
+              <Input 
+                name="area"
+                value={inputCollege.area}
+                onChange={handleInputChange} 
+                placeholder="Enter the area your college is located in" 
+                required 
+              />
+            </div>
+            <div>
+              <Label>State:</Label>
+              <Input 
+                name="state"
+                value={inputCollege.state}
+                onChange={handleInputChange} 
+                placeholder="Enter the state your college is located in" 
+                required 
+              />
+            </div>
+            <div>
+              <Label>Country:</Label>
+              <Input 
+                name="country"
+                value={inputCollege.country}
+                onChange={handleInputChange} 
+                placeholder="Enter the country your college is located in" 
+                required 
+              />
+            </div>
+            <DialogFooter>
+              <Button type="submit">Add College</Button>
+              <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
+                Cancel
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
 
   if (!isClerkLoaded || loading) {
     return (
@@ -238,6 +369,9 @@ export default function Dashboard() {
                     Selected: {selectedCollege.name}
                   </p>
                 )}
+              </div>
+              <div>
+                <AddCollegeModal />
               </div>
             </CardContent>
             <CardFooter>
