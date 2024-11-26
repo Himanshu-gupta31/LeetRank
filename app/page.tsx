@@ -45,12 +45,6 @@ export default function Home() {
         <section className="text-center mb-16 mt-6">
           <h1 className="text-5xl font-bold mb-4">Discover Your LeetCode College Rank</h1>
           <p className="text-xl mb-12">Compare your LeetCode performance with peers from your college</p>
-          <div className="flex justify-center space-x-4">
-            <Input type="text" placeholder="Enter your college name" className="max-w-xs" />
-            <Link href={"/sign-in"}>
-            <Button className='bg-neutral-600 z-10'>Get Ranking</Button>
-            </Link>
-          </div>
         </section>
 
         <section id="features" className="mb-16">
