@@ -11,13 +11,14 @@ import {
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Edit, Trophy } from "lucide-react";
+import { AlertCircleIcon, Edit, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import EditCollegeModal from "../component/EditCollege";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ProfileData {
   userProfile: {
@@ -75,11 +76,11 @@ interface ProfileData {
 export default function Component() {
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [error, setError] = useState("");
-  const [rank, setRank] = useState<string | null>("");
+  const [rank, setRank] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [username, setUsername] = useState("");
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
 
   const fetchProfileData = async () => {
     try {
@@ -89,27 +90,26 @@ export default function Component() {
     } catch (error) {
       setError("An error occurred while fetching the profile details.");
       console.error(error);
-      router.push('/dashboard')      
+      router.push("/dashboard");
     }
   };
-  const userRanking=async()=>{
+  const userRanking = async () => {
     try {
-      const response=await fetch("api/rankingsystem")
-      const data=await response.json();
-      if(response.ok){
-        setRank(data.userRank)
-      }
-      else{
-        setRank("0")
+      const response = await fetch("api/rankingsystem");
+      const data = await response.json();
+      if (response.ok) {
+        setRank(data.userRank);
+      } else {
+        setRank(null);
       }
     } catch (error) {
-      setError("An error occured while fetching user rank")
-      console.log(error)
+      setError("An error occured while fetching user rank");
+      console.log(error);
     }
-  }
+  };
   useEffect(() => {
     fetchProfileData();
-    userRanking()
+    userRanking();
   }, []);
 
   if (error) {
@@ -148,7 +148,7 @@ export default function Component() {
       }
 
       if (response.ok) {
-        fetchProfileData()
+        fetchProfileData();
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -183,7 +183,10 @@ export default function Component() {
                         <form onSubmit={handleSubmit}>
                           <CardContent className="space-y-4">
                             <div className="space-y-2">
-                              <Label htmlFor="username" className="text-white font-semibold">
+                              <Label
+                                htmlFor="username"
+                                className="text-white font-semibold"
+                              >
                                 Please enter the correct username
                               </Label>
                               <Input
@@ -252,15 +255,33 @@ export default function Component() {
                   College Rank
                 </h2>
                 {rank !== null ? (
-                  <p className="text-yellow-400 font-bold text-4xl">{rank === "0" ? 'Click on the leaderboard button to check out your rank!' : rank}</p>
+                  <p className="text-yellow-400 font-bold text-4xl">
+                    {rank === 0 ? (
+                      <p className="text-sm">
+                        Please visit the leaderboard to get your rank!
+                      </p>
+                    ) : (
+                      rank
+                    )}
+                  </p>
                 ) : (
                   <Skeleton className="h-10 w-16 bg-gray-700" />
                 )}
+                <div className="flex space-x-2">
                 <Link href={"/leaderboard"}>
                   <Button className="my-2 px-4 bg-white hover:bg-black hover:text-white text-gray-800 font-semibold">
                     Leaderboard
                   </Button>
                 </Link>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger><AlertCircleIcon color="white"/></TooltipTrigger>
+                    <TooltipContent>
+                      <p>To refresh your leetcode rank and score please re-visit the leaderboard!</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                </div>
               </div>
             </CardContent>
           </Card>
