@@ -5,6 +5,7 @@ import Navbar from "./component/Navbar";
 import {
   ClerkProvider
 } from '@clerk/nextjs'
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,9 +31,11 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en" className="bg-black text-white">
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Analytics/>
         <Navbar/>
         {children}
       </body>
