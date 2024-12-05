@@ -6,6 +6,7 @@ import {
   ClerkProvider
 } from '@clerk/nextjs'
 import { Analytics } from "@vercel/analytics/react"
+import Footer from "./component/Footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -57,6 +58,7 @@ export default function RootLayout({
         <Analytics/>
         <Navbar/>
         {children}
+        <Footer/>
       </body>
     </html>
     </ClerkProvider>
