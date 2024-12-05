@@ -26,24 +26,25 @@ model User {
 }
 
 model Ranking {
-  id         String @id @default(cuid())
-  username   String
-  collegeId  String   // to save ranking data for each college 
-  score      Int?    // this will be the score calculate by the leetcoderank api and will be stored here
-  user       User   @relation(fields: [username], references: [username])
-  college    College  @relation(fields: [collegeId],references: [id])
+  id        String  @id @default(cuid())
+  username  String
+  collegeId String // to save ranking data for each college 
+  score     Int? // this will be the score calculate by the leetcoderank api and will be stored here
+  user      User    @relation(fields: [username], references: [username])
+  college   College @relation(fields: [collegeId], references: [id])
 
   @@unique([username, collegeId])
-  @@index([collegeId,score(sort: Desc)]) // for faster querying at db level
+  @@index([collegeId, score(sort: Desc)]) // for faster querying at db level
 }
 
 model College {
-  id      String @id @default(cuid())
-  name    String @unique
+  id      String  @id @default(cuid())
+  name    String  @unique
+  slug    String? @unique
   area    String
   state   String
   country String
 
-  users   User[]
+  users    User[]
   rankings Ranking[]
 }

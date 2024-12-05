@@ -1,6 +1,3 @@
-// this will be route to calculate the ranks of all the users belonging to a college
-
-import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
@@ -16,6 +13,16 @@ query getUserProfile($username: String!) {
     }
   }
 }`;
+
+function calculateScore(submitStats: any) {
+  const weights = { Easy: 1, Medium: 3, Hard: 5 };
+  return submitStats.acSubmissionNum.reduce((score: number, stat: any) => {
+    return (
+      score +
+      stat.count * (weights[stat.difficulty as keyof typeof weights] || 0)
+    );
+  }, 0);
+}
 
 async function fetchLeetCodeData(username: string) {
   const response = await fetch("https://leetcode.com/graphql", {
@@ -37,53 +44,41 @@ async function fetchLeetCodeData(username: string) {
   return await response.json();
 }
 
-function calculateScore(submitStats: any) {
-  const weights = { Easy: 1, Medium: 3, Hard: 5 };
-  return submitStats.acSubmissionNum.reduce((score: number, stat: any) => {
-    return (
-      score +
-      stat.count * (weights[stat.difficulty as keyof typeof weights] || 0)
-    );
-  }, 0);
-}
-
-export async function GET(req: NextRequest) {
-  const { userId } = getAuth(req); // this checks on the server if the user is authenticated or not, if they are then their clerkId is fetched
-  if (!userId) {
+export async function GET(request: NextRequest) {
+  const slug = request.nextUrl.searchParams.get("slug");
+  if (!slug) {
     return NextResponse.json(
-      {
-        message: "User not authenticated",
-      },
+      { message: "Please provive the collegeId" },
       { status: 400 }
     );
   }
 
   try {
-    const profile = await prisma.user.findUnique({
+    const college = await prisma.college.findUnique({
       where: {
-        clerkId: userId,
+        slug : slug,
       },
-      select: {
-        username: true,
-        college: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
+      select : {
+        id : true,
+        name : true
+      }
     });
 
-    if (!profile || !profile.username || !profile.college) {
+    if (!college) {
       return NextResponse.json(
-        { message: "User profile incomplete" },
-        { status: 400 }
+        {
+          message:
+            "Invalid College Id, Please try again with correct college Id",
+        },
+        {
+          status: 500,
+        }
       );
     }
 
     const allUsersFromCollege = await prisma.user.findMany({
       where: {
-        collegeId: profile.college.id,
+        collegeId: college.id,
       },
       select: {
         username: true,
@@ -94,18 +89,14 @@ export async function GET(req: NextRequest) {
       allUsersFromCollege.map(async (user) => {
         try {
           const leetcodedata = await fetchLeetCodeData(user.username);
-          const score = calculateScore(
-            leetcodedata.data.matchedUser.submitStats
-          );
+          const score = calculateScore(leetcodedata.data.matchedUser.submitStats);
           const existingRanking = await prisma.ranking.findFirst({
             where: {
               username: user.username,
-              collegeId: profile.college.id,
+              collegeId: college.id,
             },
           });
-
           if (existingRanking) {
-            // if exists then update the existing ranking
             await prisma.ranking.update({
               where: {
                 id: existingRanking.id,
@@ -118,7 +109,7 @@ export async function GET(req: NextRequest) {
             await prisma.ranking.create({
               data: {
                 username: user.username,
-                collegeId: profile.college.id,
+                collegeId: college.id,
                 score: score,
               },
             });
@@ -132,18 +123,9 @@ export async function GET(req: NextRequest) {
       })
     );
 
-    // const sortedUsers = userScores.sort((a,b) => b.score - a.score)
-    // const userRank = userScores.findIndex((user) => user.username === profile.username) + 1;
-
-    // const leaderboard = sortedUsers.map((user,index) => ({
-    //     rank : index + 1,
-    //     username : user.username,
-    //     score : user.score
-    // }))
-
     const rankings = await prisma.ranking.findMany({
       where: {
-        collegeId: profile.college.id,
+        collegeId: college.id,
       },
       orderBy: {
         score: "desc",
@@ -157,8 +139,6 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const userRank =
-      rankings.findIndex((rank) => rank.username === profile.username) + 1;
     const leaderboard = rankings.map((rank, index) => ({
       rank: index + 1,
       username: rank.user.username,
@@ -166,10 +146,9 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({
-      userRank,
       totalUsers: rankings.length,
       leaderboard,
-      collegeName: profile.college.name,
+      collegeName: college.name,
     });
   } catch (error) {
     console.error("Error in ranking system:", error);
