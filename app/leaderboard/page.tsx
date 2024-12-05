@@ -45,8 +45,8 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="mx-auto px-4 py-8 min-h-screen bg-gray-900">
-      <Card className="bg-gray-900 border-none mb-8">
+    <div className="mx-auto px-12 py-8 min-h-screen bg-black ">
+      <Card className="bg-neutral-900 border-none mb-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-white">Leaderboard</CardTitle>
         </CardHeader>
@@ -68,7 +68,7 @@ export default function Leaderboard() {
               </div>
             </>
           )}
-          <Table>
+          <Table className="">
             <TableHeader>
               <TableRow>
                 <TableHead className="text-gray-400">Rank</TableHead>
@@ -79,7 +79,7 @@ export default function Leaderboard() {
             <TableBody>
               {data ? (
                 data.leaderboard.map((user) => (
-                  <TableRow key={user.username} className="border-b border-gray-800">
+                  <TableRow key={user.username} className="border-b border-gray-800 bg-gray-900 hover:bg-gray-600">
                     <TableCell className="font-medium text-white">{user.rank}</TableCell>
                     <TableCell className="text-gray-300">{user.username}</TableCell>
                     <TableCell className="text-right text-gray-300">{user.score}</TableCell>

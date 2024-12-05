@@ -209,7 +209,7 @@ export default function Dashboard() {
           <form onSubmit={handleAddCollege}>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="collegeName">College Name:</Label>
+                <Label htmlFor="collegeName">College Name/Community:</Label>
                 <Input 
                   id="collegeName"
                   name="collegeName"
