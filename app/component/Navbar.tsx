@@ -23,15 +23,15 @@ export default function Navbar() {
           </div>
 
           <SignedIn>
-            <div className="flex justify-center items-center space-x-2">
+            <div className="flex justify-center items-center space-x-2 ">
             <Link href={"/profile"}>
-                <Button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
+                <Button className="bg-neutral-700 p-2 rounded-lg  hover:bg-red-600 w-[6rem] h-[2.5rem]">
                   Profile
                 </Button>
               </Link>
               <SignOutButton>
-                <div className="flex items-center justify-end w-[6rem]">
-                  <button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
+                <div className="flex items-center justify-end ">
+                  <button className="bg-neutral-700 p-2 rounded-lg  hover:bg-red-600 w-[6rem]">
                     Sign out
                   </button>
                 </div>
