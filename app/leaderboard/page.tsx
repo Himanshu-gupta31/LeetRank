@@ -5,6 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Loader2 } from "lucide-react"
+import { CollegeSearch } from "../component/CollegeSearch"
 
 
 interface LeaderboardData {
@@ -16,6 +20,16 @@ interface LeaderboardData {
     score: number
   }[]
   collegeName: string
+}
+
+
+interface College {
+  id: string;
+  name: string;
+  area: string;
+  state: string;
+  country: string;
+  slug : string;
 }
 
 export default function Leaderboard() {
@@ -44,8 +58,10 @@ export default function Leaderboard() {
     return <div className="text-center text-red-500 font-semibold mt-8">{error}</div>
   }
 
+
   return (
     <div className="mx-auto px-12 py-8 min-h-screen bg-black ">
+
       <Card className="bg-neutral-900 border-none mb-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-white">Leaderboard</CardTitle>
@@ -98,6 +114,7 @@ export default function Leaderboard() {
           </Table>
         </CardContent>
       </Card>
+      <CollegeSearch />
     </div>
   )
 }
