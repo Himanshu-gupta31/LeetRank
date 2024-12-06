@@ -5,14 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Loader2 } from "lucide-react"
-import { CollegeSearch } from "../component/CollegeSearch"
-
 
 interface LeaderboardData {
-  userRank: number
   totalUsers: number
   leaderboard: {
     rank: number
@@ -22,24 +16,22 @@ interface LeaderboardData {
   collegeName: string
 }
 
-
-interface College {
-  id: string;
-  name: string;
-  area: string;
-  state: string;
-  country: string;
-  slug : string;
+interface LeaderboardPageProps {
+    params : {
+        slug : string
+    }
 }
 
-export default function Leaderboard() {
+export default function Leaderboard({params} : LeaderboardPageProps) {
   const [data, setData] = useState<LeaderboardData | null>(null)
   const [error, setError] = useState<string | null>(null)
-
+  // have to get the collegeId from the params
+  const slug = params.slug
+  
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await fetch("/api/leetcoderank")
+        const response = await fetch(`/api/collegeLeaderboard?slug=${slug}`)
         if (!response.ok) {
           throw new Error("Failed to fetch leaderboard data")
         }
@@ -58,10 +50,8 @@ export default function Leaderboard() {
     return <div className="text-center text-red-500 font-semibold mt-8">{error}</div>
   }
 
-
   return (
     <div className="mx-auto px-12 py-8 min-h-screen bg-black ">
-
       <Card className="bg-neutral-900 border-none mb-8">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-white">Leaderboard</CardTitle>
@@ -71,7 +61,6 @@ export default function Leaderboard() {
             <>
               <p className="text-gray-200 mb-2">College: {data.collegeName}</p>
               <div className="flex justify-between items-center mb-4">
-                <Badge variant="secondary">Your Rank: {data.userRank}</Badge>
                 <Badge variant="secondary">Total Users: {data.totalUsers}</Badge>
               </div>
             </>
@@ -114,7 +103,6 @@ export default function Leaderboard() {
           </Table>
         </CardContent>
       </Card>
-      <CollegeSearch />
     </div>
   )
 }
