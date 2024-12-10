@@ -40,7 +40,6 @@ query getUserProfile($username: String!) {
                 submissions
             }
         }
-        submissionCalendar
     }
 }`;
 
@@ -131,6 +130,9 @@ export async function POST(req: NextRequest) {
       where: {
         username: compareUsername,
       },
+      include : {
+        college : true
+      }
     });
 
     if (!comparedUserProfile) {
@@ -163,7 +165,8 @@ export async function POST(req: NextRequest) {
       user2: {
         userProfile: user2ProfileData.data || null,
         languageStats: user2LanguageData.data || null,
-        username: compareUsername,
+        collegeData: comparedUserProfile.college || "Not available",
+        username: compareUsername, 
         leetcodeScore: leetcodeScore2,
       },
     });
