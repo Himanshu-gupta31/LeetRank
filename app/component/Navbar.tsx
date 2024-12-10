@@ -1,8 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
-import { ChartNoAxesCombined } from "lucide-react";
+import { ChartNoAxesCombined, Medal } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -22,13 +28,28 @@ export default function Navbar() {
             <p className="font-bold pl-2">LeetRank</p>
           </div>
 
-          <SignedIn>
+          <SignedIn>     
+
             <div className="flex justify-center items-center space-x-2 ">
             <Link href={"/profile"}>
                 <Button className="bg-neutral-700 p-2 rounded-lg  hover:bg-red-600 w-[6rem] h-[2.5rem]">
                   Profile
                 </Button>
               </Link>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Link href={"/1v1"}>
+                      <Button className="bg-neutral-700 p-2 rounded-lg w-full hover:bg-red-600">
+                        <Medal /> 1v1
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Compare your leetcode performance with anyone!
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <SignOutButton>
                 <div className="flex items-center justify-end ">
                   <button className="bg-neutral-700 p-2 rounded-lg  hover:bg-red-600 w-[6rem]">
