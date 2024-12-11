@@ -1,15 +1,23 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter } from "next/navigation";
-import { Trophy, Search, AlertCircle, Medal, Building2, Share2, Copy } from "lucide-react";
+import {
+  Trophy,
+  Search,
+  AlertCircle,
+  Medal,
+  Building2,
+  Share2,
+  Copy,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import html2canvas from "html2canvas";
-
 
 interface LanguageStats {
   languageName: string;
@@ -83,8 +91,8 @@ export default function OneVOne() {
   );
   const [comparisonUserData, setComparisonUserData] =
     useState<UserProfile | null>(null);
-  const [shareUrl,setShareUrl] = useState<string | null>(null)
-  const comparisonRef = useRef<HTMLDivElement>(null)
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const comparisonRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
@@ -101,7 +109,8 @@ export default function OneVOne() {
       // Create metadata for social media sharing
       const title = `${loggedInUserData.username} vs ${comparisonUserData.username} LeetCode Battle`;
       const description = `${loggedInUserData.username} ${
-        (loggedInUserData.leetcodeScore || 0) > (comparisonUserData.leetcodeScore || 0)
+        (loggedInUserData.leetcodeScore || 0) >
+        (comparisonUserData.leetcodeScore || 0)
           ? "won"
           : "lost"
       } the LeetCode battle against ${comparisonUserData.username}`;
@@ -113,6 +122,7 @@ export default function OneVOne() {
 
   async function fetchLoggedInUserData() {
     try {
+      setLoading(true)
       const response = await fetch("/api/leetcodedata");
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
@@ -123,6 +133,8 @@ export default function OneVOne() {
       setError(
         err instanceof Error ? err.message : "Failed to fetch user data"
       );
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -255,16 +267,32 @@ export default function OneVOne() {
     );
   }
 
-  const updateMetaTags = (title: string, description: string, imageUrl: string) => {
+  const updateMetaTags = (
+    title: string,
+    description: string,
+    imageUrl: string
+  ) => {
     // Update Open Graph meta tags
-    document.querySelector('meta[property="og:title"]')?.setAttribute("content", title);
-    document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
-    document.querySelector('meta[property="og:image"]')?.setAttribute("content", imageUrl);
+    document
+      .querySelector('meta[property="og:title"]')
+      ?.setAttribute("content", title);
+    document
+      .querySelector('meta[property="og:description"]')
+      ?.setAttribute("content", description);
+    document
+      .querySelector('meta[property="og:image"]')
+      ?.setAttribute("content", imageUrl);
 
     // Update Twitter Card meta tags
-    document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", title);
-    document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", description);
-    document.querySelector('meta[name="twitter:image"]')?.setAttribute("content", imageUrl);
+    document
+      .querySelector('meta[name="twitter:title"]')
+      ?.setAttribute("content", title);
+    document
+      .querySelector('meta[name="twitter:description"]')
+      ?.setAttribute("content", description);
+    document
+      .querySelector('meta[name="twitter:image"]')
+      ?.setAttribute("content", imageUrl);
   };
 
   const copyToClipboard = async () => {
@@ -286,98 +314,105 @@ export default function OneVOne() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] text-white p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <h1 className="text-3xl font-bold">Compare LeetCode Stats</h1>
-          {loggedInUserData && comparisonUserData && (
-            <Badge className="px-2 py-2">
-              <h4 className="text-3xl font-bold">
-                {loggedInUserData ? loggedInUserData?.username : "Loading..."}{" "}
-                Vs.{" "}
-                {comparisonUserData
-                  ? comparisonUserData.username
-                  : "Enter username!"}
-              </h4>
-            </Badge>
-          )}
-          <div className="w-full max-w-md flex gap-2">
-            <Input
-              type="text"
-              placeholder="Enter LeetCode username to compare"
-              value={compareUsername}
-              onChange={(e) => setCompareUsername(e.target.value)}
-              className="bg-[#1A1A1A] border-[#333] text-white"
-            />
+        <div className="max-w-6xl mx-auto space-y-8">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <h1 className="text-3xl font-bold">Compare LeetCode Stats</h1>
+            {loggedInUserData && comparisonUserData && (
+              <Badge className="px-2 py-2">
+                <h4 className="text-3xl max-sm:text-md font-bold">
+                  {loggedInUserData ? loggedInUserData?.username : "Loading..."}{" "}
+                  Vs.{" "}
+                  {comparisonUserData
+                    ? comparisonUserData.username
+                    : "Enter username!"}
+                </h4>
+              </Badge>
+            )}
+            <div className="w-full max-w-md flex gap-2">
+              <Input
+                type="text"
+                placeholder="Enter LeetCode username to compare"
+                value={compareUsername}
+                onChange={(e) => setCompareUsername(e.target.value)}
+                className="bg-[#1A1A1A] border-[#333] text-white"
+              />
+            </div>
           </div>
-        </div>
 
-        {error && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <div ref={comparisonRef} className="grid md:grid-cols-2 gap-8">
-          {loggedInUserData && (
-            <UserCard
-              user={loggedInUserData}
-              showMedal={
-                comparisonUserData
-                  ? (loggedInUserData.leetcodeScore || 0) >
-                    (comparisonUserData.leetcodeScore || 0)
-                  : false
-              }
-            />
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
-          {comparisonUserData ? (
-            <UserCard
-              user={comparisonUserData}
-              showMedal={
-                loggedInUserData
-                  ? (comparisonUserData.leetcodeScore || 0) >
-                    (loggedInUserData.leetcodeScore || 0)
-                  : false
-              }
-            />
-          ) : (
-            <Card className="bg-[#1A1A1A] border-[#333] flex items-center justify-center">
-              <CardContent>
-                <p className="text-gray-400">Enter a username to compare</p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
 
-        <div className="flex justify-center space-x-4">
-          <Button
-            onClick={handleCompare}
-            disabled={loading || !compareUsername}
-          >
-            {loading ? "Comparing..." : "Compare"}
-          </Button>
-          {loggedInUserData && comparisonUserData && (
-            <Button onClick={captureComparison} className="mx-2">
-              <Share2 className="w-4 h-4" />
-              Share Result
+          <div ref={comparisonRef} className="grid md:grid-cols-2 gap-8">
+            {loggedInUserData && (
+              <UserCard
+                user={loggedInUserData}
+                showMedal={
+                  comparisonUserData
+                    ? (loggedInUserData.leetcodeScore || 0) >
+                      (comparisonUserData.leetcodeScore || 0)
+                    : false
+                }
+              />
+            )}
+            {comparisonUserData ? (
+              <UserCard
+                user={comparisonUserData}
+                showMedal={
+                  loggedInUserData
+                    ? (comparisonUserData.leetcodeScore || 0) >
+                      (loggedInUserData.leetcodeScore || 0)
+                    : false
+                }
+              />
+            ) : (
+              <Card className="bg-[#1A1A1A] border-[#333] flex items-center justify-center">
+                { !loading &&
+                  <CardContent>
+                  <p className="text-gray-400">Enter a username to compare!</p>
+                </CardContent>
+                }
+                  {loading && <Loader2 className="animate-spin flex justify-center text-center items-center" color="white" />}
+              </Card>
+            )}
+          </div>
+
+          <div className="flex justify-center space-x-4">
+            <Button
+              onClick={handleCompare}
+              disabled={loading || !compareUsername}
+            >
+              {loading ? `Loading...` : "Compare"}
             </Button>
-          )}
+            {loggedInUserData && comparisonUserData && (
+              <Button onClick={captureComparison} className="mx-2">
+                <Share2 className="w-4 h-4" />
+                Share Result
+              </Button>
+            )}
+            {shareUrl && (
+              <Button onClick={copyToClipboard} className="mx-4">
+                <Copy className="w-4 h-" />
+                Copy to Clipboard
+              </Button>
+            )}
+          </div>
+
           {shareUrl && (
-            <Button onClick={copyToClipboard} className="mx-4">
-              <Copy className="w-4 h-" />
-              Copy to Clipboard
-            </Button>
+            <div className="mt-4 text-center">
+              <p>Share this image on social media:</p>
+              <img
+                src={shareUrl}
+                alt="LeetCode Comparison Result"
+                className="mx-auto mt-2 max-w-full"
+              />
+            </div>
           )}
         </div>
-
-        {shareUrl && (
-          <div className="mt-4 text-center">
-            <p>Share this image on social media:</p>
-            <img src={shareUrl} alt="LeetCode Comparison Result" className="mx-auto mt-2 max-w-full" />
-          </div>
-        )}
-      </div>
     </div>
   );
 }
