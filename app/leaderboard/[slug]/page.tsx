@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
+import { CollegeSearch } from "@/app/component/CollegeSearch"
 
 interface LeaderboardData {
   totalUsers: number
@@ -103,6 +104,7 @@ export default function Leaderboard({params} : LeaderboardPageProps) {
           </Table>
         </CardContent>
       </Card>
+      <CollegeSearch />
     </div>
   )
 }

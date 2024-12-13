@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Loader2 } from "lucide-react"
 import { CollegeSearch } from "../component/CollegeSearch"
+import Link from "next/link"
 
 
 interface LeaderboardData {
@@ -19,7 +20,11 @@ interface LeaderboardData {
     username: string
     score: number
   }[]
-  collegeName: string
+  college: {
+    id : string;
+    name : string;
+    slug : string;
+  }
 }
 
 
@@ -69,7 +74,9 @@ export default function Leaderboard() {
         <CardContent>
           {data ? (
             <>
-              <p className="text-gray-200 mb-2">College: {data.collegeName}</p>
+            <Link href={`/leaderboard/${data.college.slug}`} className="hover:underline">
+              <p className="text-gray-200 mb-2">College: {data.college.name}</p>
+            </Link>
               <div className="flex justify-between items-center mb-4">
                 <Badge variant="secondary">Your Rank: {data.userRank}</Badge>
                 <Badge variant="secondary">Total Users: {data.totalUsers}</Badge>
