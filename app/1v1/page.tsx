@@ -267,11 +267,7 @@ export default function OneVOne() {
     );
   }
 
-  const updateMetaTags = (
-    title: string,
-    description: string,
-    imageUrl: string
-  ) => {
+  const updateMetaTags = (title: string,description: string,imageUrl: string) => {
     // Update Open Graph meta tags
     document
       .querySelector('meta[property="og:title"]')

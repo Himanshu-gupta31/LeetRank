@@ -69,6 +69,7 @@ export async function GET(req: NextRequest) {
           select: {
             id: true,
             name: true,
+            slug : true
           },
         },
       },
@@ -169,7 +170,7 @@ export async function GET(req: NextRequest) {
       userRank,
       totalUsers: rankings.length,
       leaderboard,
-      collegeName: profile.college.name,
+      college: profile.college,
     });
   } catch (error) {
     console.error("Error in ranking system:", error);
