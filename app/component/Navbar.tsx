@@ -22,6 +22,7 @@ export default function Navbar() {
   const NavButtons = ({ isMobile = false }) => (
     <>
       <SignedIn>
+
         <div
           className={`flex ${
             isMobile ? "flex-col" : "flex-row"
@@ -32,6 +33,10 @@ export default function Navbar() {
               className={`bg-neutral-700 p-2 rounded-lg hover:bg-red-600 ${
                 isMobile ? "w-full" : "w-[6rem] h-[2.5rem]"
               }`}
+        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} items-center mx-2 max-sm:space-y-2`}>
+          <Link href="/profile" className="w-full">
+            <Button 
+              className={`bg-neutral-700 p-2 rounded-lg hover:bg-red-600 ${isMobile ? 'w-full' : 'w-[6rem] '}`}
             >
               Profile
             </Button>
@@ -40,11 +45,15 @@ export default function Navbar() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
+
                 <Link href="/1v1" className="w-full">
                   <Button
                     className={`bg-neutral-700 py-4 rounded-lg hover:bg-red-600 ${
                       isMobile ? "w-full" : ""
                     }`}
+                <Link href="/1v1" className="lg:w-[80%] w-full">
+                  <Button 
+                    className={`bg-neutral-700 p-2 rounded-lg hover:bg-red-600 ${isMobile ? 'w-full' : ''}`}
                   >
                     <Medal className="mr-2" /> 1v1
                   </Button>
