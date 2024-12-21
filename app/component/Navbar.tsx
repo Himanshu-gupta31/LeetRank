@@ -31,12 +31,12 @@ export default function Navbar() {
             Profile
           </Button>
         </Link>
-        <Link href="/global">
+        <Link href="/globalLeadboard">
           <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
-            Global Leaderboard
+            Leaderboard
           </Button>
         </Link>
-        <Link href="/global">
+        <Link href="/rooms">
           <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
             Custom Room
           </Button>
