@@ -19,27 +19,7 @@ export async function POST(
     }
 
     const { username } = await req.json();
-    const isAdmin = await prisma.roomMember.findFirst({
-      where: {
-        roomId: params.roomId,
-        userId,
-        room: {
-          creatorId: userId,
-        },
-      },
-    });
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        {
-          error: "User is not an admin",
-        },
-        {
-          status: 401,
-        }
-      );
-    }
-
+  
     // find the user by username
     const userToAdd = await prisma.user.findFirst({
       where: {
@@ -50,6 +30,8 @@ export async function POST(
     if (!userToAdd) {
       return NextResponse.json({
         error: "User not found,please check the username.",
+      },{
+        status : 400
       });
     }
 
