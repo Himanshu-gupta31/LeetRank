@@ -22,7 +22,9 @@ model User {
   collegeId     String?
   college       College? @relation(fields: [collegeId], references: [id])
 
-  Ranking Ranking[]
+  Ranking     Ranking[]
+  RoomMember  RoomMember[]
+  createdRoom CustomRoom[]  @relation("RoomAdmin")
 }
 
 model Ranking {
@@ -47,4 +49,28 @@ model College {
 
   users    User[]
   rankings Ranking[]
+}
+
+model CustomRoom {
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String?
+  slug        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  creatorId   String       @unique // reference the userId of the user who created this
+  creator     User         @relation("RoomAdmin", fields: [creatorId], references: [id])
+  members     RoomMember[]
+}
+
+model RoomMember {
+  id       String     @id @default(uuid())
+  roomId   String
+  userId   String
+  joinedAt DateTime   @default(now())
+  room     CustomRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id])
+
+  @@unique([roomId, userId])
+  @@index([roomId])
 }
