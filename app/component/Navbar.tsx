@@ -31,7 +31,7 @@ export default function Navbar() {
             Profile
           </Button>
         </Link>
-        <Link href="/globalLeadboard">
+        <Link href="/globalLeaderboard">
           <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
             Leaderboard
           </Button>
