@@ -3,6 +3,7 @@ import prisma from "@/lib/db";
 import { RoomLeaderboard } from "@/app/component/RoomLeaderboard";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Users, Trophy, Info } from "lucide-react";
+import AddNewUserToRoom from "@/app/component/AddNewUserToRoomButton";
 
 export default async function RoomPage({
   params,
@@ -33,7 +34,8 @@ export default async function RoomPage({
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-7xl mx-auto p-6 space-y-8">
         {/* Header Section */}
-        <header className="space-y-4">
+        <header className="space-y-4 flex justify-between">
+          <div className="flex flex-col">
           <div className="flex items-center space-x-3">
             <Trophy className="w-8 h-8 text-blue-500" />
             <h1 className="text-4xl font-bold tracking-tight">{room.name}</h1>
@@ -41,6 +43,8 @@ export default async function RoomPage({
           {room.description && (
             <p className="text-gray-400 text-lg">{room.description}</p>
           )}
+          </div>
+          <AddNewUserToRoom roomId={room.id} />
         </header>
 
         {/* Leaderboard Section */}
@@ -56,6 +60,7 @@ export default async function RoomPage({
           <CardContent>
             <RoomLeaderboard members={room.members} />
           </CardContent>
+          <AddNewUserToRoom roomId={room.id} />
         </Card>
 
         {/* Room Information */}
