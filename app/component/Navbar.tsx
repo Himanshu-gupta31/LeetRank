@@ -20,64 +20,63 @@ export default function Navbar() {
   };
 
   const NavButtons = ({ isMobile = false }) => (
-    <>
+    <div
+      className={`${
+        isMobile
+          ? "flex flex-col space-y-4" : "flex flex-row justify-evenly space-x-4 " } items-center`}
+    >
       <SignedIn>
-        <div className={`flex ${isMobile ? 'flex-col' : 'flex-row'} items-center mx-2 max-sm:space-y-2`}>
-          <Link href="/profile" className="w-full">
-            <Button 
-              className={`bg-neutral-700 p-2 rounded-lg hover:bg-red-600 ${isMobile ? 'w-full' : 'w-[6rem] '}`}
-            >
-              Profile
-            </Button>
-          </Link>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href="/1v1" className="lg:w-[80%] w-full">
-                  <Button 
-                    className={`bg-neutral-700 p-2 rounded-lg hover:bg-red-600 ${isMobile ? 'w-full' : ''}`}
-                  >
-                    <Medal className="mr-2" /> 1v1
-                  </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                Compare your leetcode performance with anyone!
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <SignOutButton>
-            <Button 
-              className={`bg-neutral-700 p-2 rounded-lg hover:bg-red-600 ${isMobile ? 'w-full' : 'w-[6rem]'}`}
-            >
-              Sign out
-            </Button>
-          </SignOutButton>
-        </div>
+        <Link href="/profile">
+          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700 ">
+            Profile
+          </Button>
+        </Link>
+        <Link href="/global">
+          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
+            Global Leaderboard
+          </Button>
+        </Link>
+        <Link href="/global">
+          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
+            Custom Room
+          </Button>
+        </Link>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Link href="/1v1">
+                <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
+                  <Medal className="mr-2" /> 1v1
+                </Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              Compare your leetcode performance with anyone!
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <SignOutButton>
+          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-red-600">
+            Sign out
+          </Button>
+        </SignOutButton>
       </SignedIn>
-      
+  
       <SignedOut>
-        <div className={`${isMobile ? 'space-y-2' : 'flex space-x-4'}`}>
-          <Link href="/sign-up" className="w-full">
-            <Button 
-              className={`bg-neutral-700 border border-black hover:bg-green-600 transition-colors ${isMobile ? 'w-full' : 'px-3 py-2'}`}
-            >
-              Sign Up
-            </Button>
-          </Link>
-          <Link href="/sign-in" className="w-full">
-            <Button 
-              className={`bg-neutral-700 border border-black hover:bg-green-600 transition-colors ${isMobile ? 'w-full' : 'px-4 py-2'}`}
-            >
-              Sign In
-            </Button>
-          </Link>
-        </div>
+        <Link href="/sign-up">
+          <Button className="bg-neutral-700 border border-black hover:bg-green-600 transition-colors">
+            Sign Up
+          </Button>
+        </Link>
+        <Link href="/sign-in">
+          <Button className="bg-neutral-700 border border-black hover:bg-green-600 transition-colors">
+            Sign In
+          </Button>
+        </Link>
       </SignedOut>
-    </>
+    </div>
   );
+  
 
   return (
     <nav className="w-full border-b border-neutral-600 bg-black text-white">
