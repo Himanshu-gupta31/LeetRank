@@ -40,8 +40,8 @@ export default function RoomsPage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="animate-pulse space-y-4">
-          <div className="h-4 w-32 bg-gray-700 rounded"></div>
-          <div className="h-4 w-24 bg-gray-700 rounded"></div>
+          <div className="h-20 w-32 bg-gray-700 rounded"></div>
+          <div className="h-20 w-24 bg-gray-700 rounded"></div>
         </div>
       </div>
     );

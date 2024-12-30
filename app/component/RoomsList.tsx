@@ -44,15 +44,15 @@ export function RoomList() {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {rooms.length > 0 &&
         rooms.map((room) => (
-          <Card key={room.id} className="">
+          <Card key={room.id} className="bg-indigo-800 hover:shadow-md hover:shadow-white">
             <CardHeader>
-              <CardTitle>{room.name}</CardTitle>
+              <CardTitle className="text-white text-xl font-semibold">{room.name}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-sm text-white mb-4">
                 {room.description || "No description"}
               </p>
-              <p className="text-sm">
+              <p className="text-sm text-white">
                 {room.members.length} member
                 {room.members.length === 1 ? "" : "s"}
               </p>
