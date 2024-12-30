@@ -58,41 +58,49 @@ export default function Home() {
 
       <main className="container mx-auto px-4 py-12 relative z-10">
         <section className="text-center mb-16 mt-6">
-          <h1 className="text-5xl font-bold mb-4">
+          <h1 className="text-6xl font-bold mb-8 bg-gradient-to-b from-neutral-700 to-neutral-300 text-transparent bg-clip-text">
             Discover Your LeetCode College Rank
           </h1>
-          <p className="text-xl mb-12">
+          <p className="text-3xl mb-12 text-white">
             Compare your LeetCode performance with peers from your college
           </p>
-          <Badge className="text-xl font-semibold">Click on any college to check out their leaderboard!</Badge>
-        <div>
-          <MarqueeDemo />
-        </div>
+          <Badge className="text-2xl font-semibold mb-8 bg-black">
+            Click on any college to check out their leaderboard!
+          </Badge>
+          <div>
+            <MarqueeDemo />
+          </div>
         </section>
 
         <section id="features" className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Features:</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <Trophy className="w-12 h-12 mb-4 text-yellow-400" />
-              <h3 className="text-xl font-semibold mb-2">
-                College Leaderboard
-              </h3>
-              <p>
-                See how you stack up against other students from your college
-              </p>
+            <div className="relative p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 ">
+              <div className="bg-gray-800 p-[4rem] rounded-full">
+                <Trophy className="w-12 h-12 mb-4 text-yellow-400" />
+                <h3 className="text-xl font-semibold mb-2">
+                  College Leaderboard
+                </h3>
+                <p>
+                  See how you stack up against other students from your college
+                </p>
+              </div>
             </div>
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <Users className="w-12 h-12 mb-4 text-green-400" />
-              <h3 className="text-xl font-semibold mb-2">Peer Comparison</h3>
-              <p>Compare your progress with friends and classmates</p>
+            <div className="relative p-[2px] rounded-full bg-gradient-to-r from-green-400 via-teal-500 to-blue-500">
+              <div className="bg-gray-800 p-[4rem] rounded-full">
+                <Users className="w-12 h-12 mb-4 text-green-400" />
+                <h3 className="text-xl font-semibold mb-2">Peer Comparison</h3>
+                <p>Compare your progress with friends and classmates</p>
+              </div>
             </div>
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <Zap className="w-12 h-12 mb-4 text-blue-400" />
-              <h3 className="text-xl font-semibold mb-2">
-                Performance Insights
-              </h3>
-              <p>Get detailed insights into your LeetCode performance</p>
+            <div className="relative p-[2px] rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 ">
+              <div className="bg-gray-800 p-[4rem] rounded-full">
+                <Zap className="w-12 h-12 mb-4 text-blue-400" />
+                <h3 className="text-xl font-semibold mb-2">
+                  Performance Insights
+                </h3>
+                <p>Get detailed insights into your LeetCode performance</p>
+              </div>
             </div>
           </div>
         </section>

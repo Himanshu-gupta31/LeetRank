@@ -62,7 +62,7 @@ export function MarqueeDemo() {
 
   return (
     <div className="relative flex h-[250px] w-full flex-col items-center justify-center overflow-hidden rounded-lg bg-transparent md:shadow-xl">
-      <Marquee pauseOnHover className="[--duration:110s]">
+      <Marquee pauseOnHover className="[--duration:1100s]">
         {colleges.map((review) => (
           <ReviewCard key={review.username} {...review} />
         ))}
