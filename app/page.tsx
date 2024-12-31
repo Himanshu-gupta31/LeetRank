@@ -75,8 +75,8 @@ export default function Home() {
         <section id="features" className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center">Features:</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="relative p-[2px] rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 ">
-              <div className="bg-gray-800 p-[4rem] rounded-full">
+            <div className="relative p-[2px] rounded-2xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 ">
+              <div className="bg-gray-800 p-[4rem] rounded-2xl">
                 <Trophy className="w-12 h-12 mb-4 text-yellow-400" />
                 <h3 className="text-xl font-semibold mb-2">
                   College Leaderboard
@@ -86,15 +86,15 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="relative p-[2px] rounded-full bg-gradient-to-r from-green-400 via-teal-500 to-blue-500">
-              <div className="bg-gray-800 p-[4rem] rounded-full">
+            <div className="relative p-[2px] rounded-2xl bg-gradient-to-r from-green-400 via-teal-500 to-blue-500">
+              <div className="bg-gray-800 p-[4rem] rounded-2xl">
                 <Users className="w-12 h-12 mb-4 text-green-400" />
                 <h3 className="text-xl font-semibold mb-2">Peer Comparison</h3>
                 <p>Compare your progress with friends and classmates</p>
               </div>
             </div>
-            <div className="relative p-[2px] rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 ">
-              <div className="bg-gray-800 p-[4rem] rounded-full">
+            <div className="relative p-[2px] rounded-2xl bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 ">
+              <div className="bg-gray-800 p-[4rem] rounded-2xl">
                 <Zap className="w-12 h-12 mb-4 text-blue-400" />
                 <h3 className="text-xl font-semibold mb-2">
                   Performance Insights
