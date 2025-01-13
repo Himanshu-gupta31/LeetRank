@@ -12,14 +12,14 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const bgColour = [
-    "bg-red-500/20",
-    "bg-blue-500/20",
-    "bg-green-500/20",
-    "bg-yellow-500/20",
-    "bg-purple-500/20",
-    "bg-pink-500/20",
-    "bg-indigo-500/20",
-    "bg-teal-500/20",
+    "bg-neutral-800",
+    "bg-neutral-900",
+    "bg-zinc-900",
+    "bg-zinc-800",
+    "bg-gray-800",
+    "bg-stone-900",
+    "bg-stone-800",
+    
   ];
   const router = useRouter();
   const { isSignedIn, user } = useUser();
