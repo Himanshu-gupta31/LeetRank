@@ -10,6 +10,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    // First check if user exists
     let user = await prisma.user.findUnique({
       where: { clerkId: clerkId as string },
       select: {
@@ -19,33 +20,51 @@ export async function GET(req: NextRequest) {
       }
     });
 
+    // If no user found, get current authenticated user and create one
     if (!user) {
-      // Get the current user's details from Clerk
+      // Explicitly check auth session first
+      const { userId } = await auth();
+      
+      if (!userId) {
+        return NextResponse.json({ error: "Authentication required" }, { status: 401 });
+      }
+      
       const clerkUser = await currentUser();
       
       if (!clerkUser) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return NextResponse.json({ error: "Unable to fetch user details" }, { status: 401 });
       }
 
-      user = await prisma.user.create({
-        data: {
-          clerkId: clerkId,
-          clerkusername: `${clerkUser.firstName} ${clerkUser.lastName}`,
-          email: clerkUser.emailAddresses[0]?.emailAddress,
-        },
-        select: {
-          clerkusername: true,
-          username: true,
-          college: true,
-        }
-      });
+      // Add error handling for missing data
+      if (!clerkUser.emailAddresses || clerkUser.emailAddresses.length === 0) {
+        return NextResponse.json({ error: "Email address required" }, { status: 400 });
+      }
+
+      // Create the user with proper error handling
+      try {
+        user = await prisma.user.create({
+          data: {
+            clerkId: clerkId,
+            clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User',
+            email: clerkUser.emailAddresses[0]?.emailAddress,
+          },
+          select: {
+            clerkusername: true,
+            username: true,
+            college: true,
+          }
+        });
+      } catch (createError) {
+        console.error("Error creating user:", createError);
+        return NextResponse.json({ error: "Failed to create user account" }, { status: 500 });
+      }
     }
 
     return NextResponse.json({ user }, { status: 200 });
   } catch (error) {
     console.error("Error fetching/creating the user", error);
     return NextResponse.json(
-      { error: "Internal server error has occurred." },
+      { error: "Please sign up again" }, // Return the actual error message
       { status: 500 }
     );
   }
