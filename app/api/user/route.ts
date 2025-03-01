@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // First check if user exists
+    // First check if user exists by clerkId
     let user = await prisma.user.findUnique({
       where: { clerkId: clerkId as string },
       select: {
@@ -35,18 +35,24 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Unable to fetch user details" }, { status: 401 });
       }
 
-      // Add error handling for missing data
-      if (!clerkUser.emailAddresses || clerkUser.emailAddresses.length === 0) {
+      const email = clerkUser.emailAddresses[0]?.emailAddress;
+
+      if (!email) {
         return NextResponse.json({ error: "Email address required" }, { status: 400 });
       }
 
-      // Create the user with proper error handling
-      try {
-        user = await prisma.user.create({
-          data: {
+      // Check if user with this email already exists
+      const existingUserWithEmail = await prisma.user.findUnique({
+        where: { email: email }
+      });
+
+      if (existingUserWithEmail) {
+        // Update the existing user with the new clerkId
+        user = await prisma.user.update({
+          where: { email: email },
+          data: { 
             clerkId: clerkId,
-            clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User',
-            email: clerkUser.emailAddresses[0]?.emailAddress,
+            clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User'
           },
           select: {
             clerkusername: true,
@@ -54,9 +60,25 @@ export async function GET(req: NextRequest) {
             college: true,
           }
         });
-      } catch (createError) {
-        console.error("Error creating user:", createError);
-        return NextResponse.json({ error: "Failed to create user account" }, { status: 500 });
+      } else {
+        // Create new user since no email conflict exists
+        try {
+          user = await prisma.user.create({
+            data: {
+              clerkId: clerkId,
+              clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User',
+              email: email,
+            },
+            select: {
+              clerkusername: true,
+              username: true,
+              college: true,
+            }
+          });
+        } catch (createError) {
+          console.error("Error creating user:", createError);
+          return NextResponse.json({ error: "Failed to create user account" }, { status: 500 });
+        }
       }
     }
 
@@ -64,7 +86,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching/creating the user", error);
     return NextResponse.json(
-      { error: "Please sign up again" }, // Return the actual error message
+      { error: "Please sign up again" },
       { status: 500 }
     );
   }
