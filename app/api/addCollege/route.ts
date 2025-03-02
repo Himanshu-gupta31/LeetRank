@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+    const slug = collegeName.toLowerCase().replace(/\s+/g, "-");
 
     const res = await prisma.college.create({
       data: {
@@ -16,6 +17,7 @@ export async function POST(req: NextRequest) {
         area: area,
         state: state,
         country: country,
+        slug: slug, 
       },
     });
 
