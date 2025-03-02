@@ -30,6 +30,7 @@ export function CollegeSearch() {
       try {
         const res = await fetch("/api/college")
         const data = await res.json()
+        console.log(data)
         setColleges(data)
         setIsCollegesLoading(false)
       } catch (error) {
