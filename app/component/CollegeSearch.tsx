@@ -28,7 +28,7 @@ export function CollegeSearch() {
   useEffect(() => {
     const fetchColleges = async () => {
       try {
-        const res = await fetch("/api/college")
+        const res = await fetch("/api/College")
         const data = await res.json()
         console.log(data)
         setColleges(data)
