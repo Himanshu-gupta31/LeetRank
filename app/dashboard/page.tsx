@@ -179,16 +179,28 @@ export default function Dashboard() {
           },
           body: JSON.stringify(inputCollege)
         });
-
+    
         if (res.ok) {
           setIsModalOpen(false);
+          const newCollege = await res.json(); // Get the newly added college data
+          
           setInputCollege({
             collegeName: '',
             area: '',
             state: '',
             country: ''
           });
+          
           await fetchColleges();
+          
+          // Clear search value to show all colleges including the new one
+          setSearchValue('');
+          
+          // Optionally, auto-select the newly added college
+          if (newCollege && newCollege.id) {
+            setSelectedCollege(newCollege);
+            setSearchValue(newCollege.collegeName);
+          }
         } else {
           const errorData = await res.json();
           console.error("Unable to add College", errorData);
