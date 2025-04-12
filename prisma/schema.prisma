@@ -18,7 +18,7 @@ model User {
   clerkId       String?  @unique
   username      String?  @unique
   email         String?  @unique
-  clerkusername String?  @unique
+  clerkusername String?  
   collegeId     String?
   college       College? @relation(fields: [collegeId], references: [id])
 
