@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Room {
   id: string;
@@ -19,6 +20,7 @@ interface Room {
 export function RoomList() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -44,7 +46,7 @@ export function RoomList() {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       {rooms.length > 0 &&
         rooms.map((room) => (
-          <Card key={room.id} className="bg-indigo-800 hover:shadow-md hover:shadow-white">
+          <Card key={room.id} onClick={() => router.push(`/rooms/${room.id}`)} className="bg-indigo-800 hover:shadow-md hover:shadow-white">
             <CardHeader>
               <CardTitle className="text-white text-xl font-semibold">{room.name}</CardTitle>
             </CardHeader>

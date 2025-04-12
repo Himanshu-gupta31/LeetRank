@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,6 +47,7 @@ export default function Leaderboard() {
         <Card className="bg-neutral-900 border-none mb-8">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-white">Global Leaderboard</CardTitle>
+            <CardDescription>A leaderboard for all <span>Leetrank</span>users: </CardDescription>
           </CardHeader>
           <CardContent>
             <Skeleton className="h-4 w-3/4 bg-gray-700 mb-2" />
