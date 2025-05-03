@@ -8,7 +8,6 @@ export async function GET(req:NextRequest) {
     }
     try {
         const rankings=await prisma.ranking.findMany({
-            
             orderBy:{
                 score:"desc"
             },
@@ -23,13 +22,7 @@ export async function GET(req:NextRequest) {
             score:user.score
         }))
         const userRank=leaderboard.find((user)=>user.username === userId)?.rank || null
-        return NextResponse.json({
-            rankings,
-            leaderboard,
-            userRank,
-            totalUsers:leaderboard.length
-            
-        })
+        return NextResponse.json({rankings,leaderboard,userRank,totalUsers:leaderboard.length})
     } catch (error) {
         console.error("Error in Global Leaderboard",error)
         return NextResponse.json({ message: "An error occurred" }, { status: 500 });
