@@ -105,7 +105,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="contact" className="text-center">
+        {/* <section id="contact" className="text-center">
           <h2 className="text-3xl font-bold mb-4 text-green-300">
             Get in Touch
           </h2>
@@ -115,7 +115,7 @@ export default function Home() {
           <Link href="https://x.com/Himanshuu3112">
             <Button className="hover:bg-red-200">Contact Us</Button>
           </Link>
-        </section>
+        </section> */}
       </main>
     </div>
   );
