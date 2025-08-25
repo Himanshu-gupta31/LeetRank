@@ -42,9 +42,9 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-black text-white overflow-hidden relative">
       {/* Animated background dots */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/10 rounded-full animate-pulse"></div>
         <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/20 rounded-full animate-pulse delay-1000"></div>
         <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-white/15 rounded-full animate-pulse delay-2000"></div>
@@ -82,7 +82,7 @@ export default function Home() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-white/30 text-white hover:bg-white/10 hover:border-white/50 transition-all duration-300 px-8 py-6 text-lg bg-transparent"
+                className="border-white/30 text-white hover:bg-white/10 hover:text-white hover:border-white/50 transition-all duration-300 px-8 py-6 text-lg bg-transparent"
               >
                 Learn More
               </Button>

@@ -3,12 +3,12 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-800 py-12 relative z-10">
+        <footer className="bg-black py-12 relative z-10">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <h2 className="text-2xl text-white font-bold mb-4">LeetRank</h2>
-              <p className="text-gray-400 mb-4">
+              <p className="text-white mb-4">
                 Empowering students to track their LeetCode progress and compete with peers from their college.
                 Join LeetRank today and elevate your coding skills to new heights!
               </p>
