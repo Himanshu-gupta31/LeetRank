@@ -181,38 +181,7 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Custom Animations */}
-      <style jsx>{`
-        @keyframes fall {
-          0% {
-            transform: translateY(-10vh);
-            opacity: 0;
-          }
-          20% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(110vh);
-            opacity: 0;
-          }
-        }
-        .animate-fall {
-          animation: fall linear infinite;
-        }
-        @keyframes shooting {
-          0% {
-            transform: translate(0, 0) rotate(45deg);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(300px, 300px) rotate(45deg);
-            opacity: 0;
-          }
-        }
-        .animate-shooting-star {
-          animation: shooting 2s linear infinite;
-        }
-      `}</style>
+
     </div>
   )
 }

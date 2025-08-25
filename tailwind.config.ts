@@ -78,11 +78,36 @@ const config: Config = {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        fall: {
+          "0%": {
+            transform: "translateY(-10vh)",
+            opacity: "0",
+          },
+          "20%": {
+            opacity: "1",
+          },
+          "100%": {
+            transform: "translateY(110vh)",
+            opacity: "0",
+          },
+        },
+        shooting: {
+          "0%": {
+            transform: "translate(0, 0) rotate(45deg)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "translate(300px, 300px) rotate(45deg)",
+            opacity: "0",
+          },
+        },
       },
       animation: {
         "gradient-move": "gradient-move 3s ease infinite",
         marquee: "marquee var(--duration) infinite linear",
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
+        fall: "fall linear infinite",
+        "shooting-star": "shooting 2s linear infinite",
       },
     },
   },
