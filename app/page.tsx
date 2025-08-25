@@ -7,7 +7,7 @@ import { useUser } from "@clerk/nextjs"
 
 export default function Home() {
   const router = useRouter()
-  const { isSignedIn, user } = useUser()
+  const { isSignedIn } = useUser()
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -43,12 +43,45 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden relative">
-      {/* Animated background dots */}
+      {/* Background effects container */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+        {/* Existing dots */}
         <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/10 rounded-full animate-pulse"></div>
         <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/20 rounded-full animate-pulse delay-1000"></div>
         <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-white/15 rounded-full animate-pulse delay-2000"></div>
         <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-white/10 rounded-full animate-pulse delay-3000"></div>
+
+        {/* Circular gray lights (blurred) */}
+        <div className="absolute top-20 left-1/4 w-64 h-64 bg-gray-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-32 right-1/3 w-80 h-80 bg-gray-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-2/3 w-72 h-72 bg-gray-600/10 rounded-full blur-3xl"></div>
+
+        {/* Snow-like falling dots */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className={`absolute w-1 h-1 bg-white/40 rounded-full animate-fall`}
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: `${5 + Math.random() * 5}s`,
+            }}
+          ></div>
+        ))}
+
+        {/* Shooting stars */}
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-0.5 h-12 bg-gradient-to-b from-white/80 to-transparent animate-shooting-star"
+            style={{
+              top: `${Math.random() * 80}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${i * 4 + Math.random() * 3}s`,
+            }}
+          ></div>
+        ))}
       </div>
 
       <main className="container mx-auto px-6 py-16 relative z-10">
@@ -147,6 +180,39 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* Custom Animations */}
+      <style jsx>{`
+        @keyframes fall {
+          0% {
+            transform: translateY(-10vh);
+            opacity: 0;
+          }
+          20% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(110vh);
+            opacity: 0;
+          }
+        }
+        .animate-fall {
+          animation: fall linear infinite;
+        }
+        @keyframes shooting {
+          0% {
+            transform: translate(0, 0) rotate(45deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(300px, 300px) rotate(45deg);
+            opacity: 0;
+          }
+        }
+        .animate-shooting-star {
+          animation: shooting 2s linear infinite;
+        }
+      `}</style>
     </div>
   )
 }

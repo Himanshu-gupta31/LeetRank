@@ -119,25 +119,35 @@ export async function GET(req: NextRequest) {
             }
           });
         } catch (createError: any) {
-          console.error("Error creating user:", createError);
+          console.error("Error creating user:", {
+            createError,
+            clerkId,
+            email,
+          });
           
-          // Handle specific Prisma errors
+          // Handle specific Prisma errors first
           if (createError.code === 'P2002') {
-            // Unique constraint violation
             const field = createError.meta?.target?.[0];
             if (field === 'clerkId') {
               return NextResponse.json({ 
-                error: "User ID already exists. Please try signing in again." 
+                error: "User ID already exists. Please try signing in again.",
+                code: createError.code,
+                field,
               }, { status: 409 });
             } else if (field === 'email') {
               return NextResponse.json({ 
-                error: "Email already registered. Please sign in with existing account." 
+                error: "Email already registered. Please sign in with existing account.",
+                code: createError.code,
+                field,
               }, { status: 409 });
             }
           }
           
+          // Temporary: expose error code/message to help diagnose production issue
           return NextResponse.json({ 
-            error: "Failed to create user account. Please try again." 
+            error: "Failed to create user account. Please try again.",
+            code: createError?.code ?? null,
+            message: createError?.message ?? null,
           }, { status: 500 });
         }
       }
