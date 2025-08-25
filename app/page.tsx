@@ -52,20 +52,20 @@ export default function Home() {
         <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-neutral-600 rounded-full animate-pulse delay-3000"></div>
 
         {/* Circular gray lights (blurred) */}
-        <div className="absolute top-20 left-1/4 w-64 h-64 bg-gray-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-32 right-1/3 w-80 h-80 bg-gray-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-2/3 w-72 h-72 bg-gray-600/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-1/4 w-64 h-64 bg-gray-500/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-32 right-1/3 w-80 h-80 bg-gray-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-2/3 w-72 h-72 bg-gray-600/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
 
         {/* Snow-like falling dots */}
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className={`absolute w-1 h-1 bg-white rounded-full animate-fall`}
+            className={`absolute w-2 h-2 bg-white rounded-full animate-fall opacity-60`}
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 5}s`,
+              animationDuration: `${3 + Math.random() * 3}s`,
             }}
           ></div>
         ))}
@@ -74,11 +74,11 @@ export default function Home() {
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-0.5 h-12 bg-gradient-to-b from-white/80 to-transparent animate-shooting-star"
+            className="absolute w-1 h-16 bg-gradient-to-b from-white to-transparent animate-shooting-star opacity-80"
             style={{
               top: `${Math.random() * 80}%`,
               left: `${Math.random() * 100}%`,
-              animationDelay: `${i * 4 + Math.random() * 3}s`,
+              animationDelay: `${i * 3 + Math.random() * 2}s`,
             }}
           ></div>
         ))}

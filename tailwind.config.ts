@@ -83,8 +83,11 @@ const config: Config = {
             transform: "translateY(-10vh)",
             opacity: "0",
           },
-          "20%": {
-            opacity: "1",
+          "10%": {
+            opacity: "0.8",
+          },
+          "90%": {
+            opacity: "0.8",
           },
           "100%": {
             transform: "translateY(110vh)",
