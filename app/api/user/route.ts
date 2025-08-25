@@ -46,22 +46,65 @@ export async function GET(req: NextRequest) {
         where: { email: email }
       });
 
+      // Check if user with this clerkId already exists (shouldn't happen but safety check)
+      const existingUserWithClerkId = await prisma.user.findUnique({
+        where: { clerkId: clerkId }
+      });
+
       if (existingUserWithEmail) {
-        // Update the existing user with the new clerkId
-        user = await prisma.user.update({
-          where: { email: email },
-          data: { 
-            clerkId: clerkId,
-            clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User'
-          },
-          select: {
-            clerkusername: true,
-            username: true,
-            college: true,
-          }
-        });
+        // If email exists, update that user with the new clerkId
+        // But first check if the clerkId is already taken by another user
+        if (existingUserWithClerkId && existingUserWithClerkId.id !== existingUserWithEmail.id) {
+          // Another user already has this clerkId, we need to handle this conflict
+          // For now, we'll return an error asking user to contact support
+          return NextResponse.json({ 
+            error: "Account conflict detected. Please contact support." 
+          }, { status: 409 });
+        }
+
+        try {
+          user = await prisma.user.update({
+            where: { email: email },
+            data: { 
+              clerkId: clerkId,
+              clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User'
+            },
+            select: {
+              clerkusername: true,
+              username: true,
+              college: true,
+            }
+          });
+        } catch (updateError) {
+          console.error("Error updating user:", updateError);
+          return NextResponse.json({ 
+            error: "Failed to update user account" 
+          }, { status: 500 });
+        }
+      } else if (existingUserWithClerkId) {
+        // If clerkId exists but email doesn't, this is an unusual case
+        // Update the existing user with the new email
+        try {
+          user = await prisma.user.update({
+            where: { clerkId: clerkId },
+            data: { 
+              email: email,
+              clerkusername: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || 'Anonymous User'
+            },
+            select: {
+              clerkusername: true,
+              username: true,
+              college: true,
+            }
+          });
+        } catch (updateError) {
+          console.error("Error updating user:", updateError);
+          return NextResponse.json({ 
+            error: "Failed to update user account" 
+          }, { status: 500 });
+        }
       } else {
-        // Create new user since no email conflict exists
+        // Create new user since no conflicts exist
         try {
           user = await prisma.user.create({
             data: {
@@ -75,9 +118,27 @@ export async function GET(req: NextRequest) {
               college: true,
             }
           });
-        } catch (createError) {
+        } catch (createError: any) {
           console.error("Error creating user:", createError);
-          return NextResponse.json({ error: "Failed to create user account" }, { status: 500 });
+          
+          // Handle specific Prisma errors
+          if (createError.code === 'P2002') {
+            // Unique constraint violation
+            const field = createError.meta?.target?.[0];
+            if (field === 'clerkId') {
+              return NextResponse.json({ 
+                error: "User ID already exists. Please try signing in again." 
+              }, { status: 409 });
+            } else if (field === 'email') {
+              return NextResponse.json({ 
+                error: "Email already registered. Please sign in with existing account." 
+              }, { status: 409 });
+            }
+          }
+          
+          return NextResponse.json({ 
+            error: "Failed to create user account. Please try again." 
+          }, { status: 500 });
         }
       }
     }
