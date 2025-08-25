@@ -46,10 +46,10 @@ export default function Home() {
       {/* Background effects container */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
         {/* Existing dots */}
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white/10 rounded-full animate-pulse"></div>
-        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-white/20 rounded-full animate-pulse delay-1000"></div>
-        <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-white/15 rounded-full animate-pulse delay-2000"></div>
-        <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-white/10 rounded-full animate-pulse delay-3000"></div>
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-neutral-700 rounded-full animate-pulse"></div>
+        <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-neutral-600 rounded-full animate-pulse delay-1000"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-neutral-700 rounded-full animate-pulse delay-2000"></div>
+        <div className="absolute top-2/3 right-1/4 w-1 h-1 bg-neutral-600 rounded-full animate-pulse delay-3000"></div>
 
         {/* Circular gray lights (blurred) */}
         <div className="absolute top-20 left-1/4 w-64 h-64 bg-gray-500/10 rounded-full blur-3xl"></div>
@@ -60,7 +60,7 @@ export default function Home() {
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className={`absolute w-1 h-1 bg-white/40 rounded-full animate-fall`}
+            className={`absolute w-1 h-1 bg-white rounded-full animate-fall`}
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
