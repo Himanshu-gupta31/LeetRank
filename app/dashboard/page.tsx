@@ -341,7 +341,7 @@ export default function Dashboard() {
                     onFocus={() => setShowCollegeList(true)}
                   />
                   {showCollegeList && (
-                    <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-white rounded-md shadow-lg border border-gray-200">
+                    <div className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-neutral-800 text-white rounded-md shadow-lg border border-gray-700">
                       {isCollegesLoading ? (
                         <div className="p-2 text-center">
                           <Loader2 className="animate-spin inline-block" />
@@ -355,7 +355,7 @@ export default function Dashboard() {
                         filteredColleges.map((college) => (
                           <div
                             key={college.id}
-                            className="p-2 hover:bg-gray-100 cursor-pointer"
+                            className="p-2 hover:bg-gray-700 cursor-pointer"
                             onClick={() => {
                               setSelectedCollege(college);
                               setSearchValue(college.name);
