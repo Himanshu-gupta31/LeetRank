@@ -112,7 +112,7 @@ export function CollegeSearch() {
                       key={college.id}
                       role="option"
                       aria-selected={false}
-                      className="p-2 hover:bg-neutral-700 cursor-pointer text-gray-200"
+                      className="p-2 hover:bg-neutral-700 cursor-pointer text-black"
                       onClick={() => {
                         router.push(`/leaderboard/${college.slug}`)
                         setShowCollegeList(false)

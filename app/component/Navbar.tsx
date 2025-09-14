@@ -27,17 +27,17 @@ export default function Navbar() {
     >
       <SignedIn>
         <Link href="/profile">
-          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700 ">
+          <Button className="bg-black text-white p-2 rounded-lg hover:bg-blue-700 ">
             Profile
           </Button>
         </Link>
         <Link href="/globalLeaderboard">
-          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
+          <Button className="bg-black text-white p-2 rounded-lg hover:bg-blue-700">
             Leaderboard
           </Button>
         </Link>
         <Link href="/rooms">
-          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
+          <Button className="bg-black text-white p-2 rounded-lg hover:bg-blue-700">
             Custom Room
           </Button>
         </Link>
@@ -45,7 +45,7 @@ export default function Navbar() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="/1v1">
-                <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-blue-700">
+                <Button className="bg-black text-white p-2 rounded-lg hover:bg-blue-700">
                   <Medal className="mr-2" /> 1v1
                 </Button>
               </Link>
@@ -56,7 +56,7 @@ export default function Navbar() {
           </Tooltip>
         </TooltipProvider>
         <SignOutButton>
-          <Button className="bg-neutral-700 p-2 rounded-lg hover:bg-red-600">
+          <Button className="bg-black text-white p-2 rounded-lg hover:bg-red-600">
             Sign out
           </Button>
         </SignOutButton>
@@ -64,12 +64,12 @@ export default function Navbar() {
   
       <SignedOut>
         <Link href="/sign-up">
-          <Button className="bg-neutral-700 border border-black hover:bg-green-600 transition-colors">
+          <Button className="bg-white text-black border border-black hover:bg-green-600 transition-colors">
             Sign Up
           </Button>
         </Link>
         <Link href="/sign-in">
-          <Button className="bg-neutral-700 border border-black hover:bg-green-600 transition-colors">
+          <Button className="bg-white text-black hover:bg-green-600 transition-colors">
             Sign In
           </Button>
         </Link>
