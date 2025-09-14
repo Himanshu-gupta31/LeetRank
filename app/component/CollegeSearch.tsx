@@ -102,7 +102,8 @@ export function CollegeSearch() {
                 id="college-list"
                 role="listbox"
                 className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto 
-               bg-neutral-800 text-white rounded-md shadow-lg border border-gray-700"
+              rounded-md shadow-lg border border-gray-700 
+             !bg-neutral-900 !text-white"
               >
                 {isCollegesLoading ? (
                   <div className="p-2 text-center text-gray-300">
