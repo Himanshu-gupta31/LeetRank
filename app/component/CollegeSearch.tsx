@@ -95,7 +95,7 @@ export function CollegeSearch() {
                 ref={dropdownRef}
                 id="college-list"
                 role="listbox"
-                className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-neutral-800 rounded-md shadow-lg border border-gray-700"
+                className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto bg-white text-black rounded-md shadow-lg border border-gray-700"
               >
                 {isCollegesLoading ? (
                   <div className="p-2 text-center text-gray-300">
